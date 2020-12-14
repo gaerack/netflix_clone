@@ -1,5 +1,7 @@
 package com.android.netflixclone;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -8,37 +10,55 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 
-public class CardSliderAdapter extends RecyclerView.Adapter<CardSliderAdapter.CardSliderViewHolder> {
+import java.util.List;
 
+public class CardSliderAdapter extends RecyclerView.Adapter<CardSliderAdapter.CardSliderViewHolder>
+{
+    List<CardSliderItem> cardSliderItems;
 
+    CardSliderAdapter(List<CardSliderItem> cardSliderItems)
+    {
+        this.cardSliderItems = cardSliderItems;
+    }
 
     @NonNull
     @Override
-    public CardSliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+    public CardSliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
+        return new CardSliderViewHolder(
+                LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.card_slider_item,
+                        parent,
+                        false
+                )
+        );
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CardSliderViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull CardSliderViewHolder holder, int position)
+    {
+        holder.setImage(cardSliderItems.get(position));
     }
 
     @Override
-    public int getItemCount() {
-        return 0;
+    public int getItemCount()
+    {
+        return cardSliderItems.size();
     }
 
-    class CardSliderViewHolder extends RecyclerView.ViewHolder {
-
+    public class CardSliderViewHolder extends RecyclerView.ViewHolder
+    {
         private RoundedImageView imageView;
 
-        CardSliderViewHolder(@NonNull View itemView) {
+        public CardSliderViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.card_slider_item);
         }
 
         void setImage(CardSliderItem cardSliderItem)
         {
+            // If you want to display image from the internet
+            // You can put code here using glide or picasso.
             imageView.setImageResource(cardSliderItem.getImage());
         }
     }
