@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Netflix Clone</string>
+    <string name="cd_btn_menu">Menu Button</string>
+    <string name="cd_iv_logo">Logo Image</string>
+    <string name="cd_btn_search">Search Button</string>
+    <string name="btn_discover">DISCOVER</string>
+    <string name="btn_categories">CATEGORIES</string>
+    <string name="btn_specials">SPECIALS</string>
+    <string name="btn_new">NEW</string>
+    <string name="tv_mylist">My List</string>
+    <string name="cd_mylist">My List Button</string>
+</resources>
