@@ -143,26 +143,12 @@
 
             </LinearLayout>
 
-            <HorizontalScrollView
-                android:id="@+id/hsv_mylist"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/vp_mylist"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/layout_hsv_mylist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" >
-
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/vp_mylist"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingStart="80dp"
-                        android:paddingEnd="80dp" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
+                android:layout_height="match_parent"
+                android:paddingStart="40dp"
+                android:paddingEnd="40dp"/>
 
         </LinearLayout>
     </ScrollView>
