@@ -8,24 +8,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.slider.Slider;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
-public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapter.NewestSliderViewHolder> {
-
+public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapter.NewestSliderViewHolder>
+{
     private List<NewestSliderItem> newestSliderItems;
     private ViewPager2 viewPager2;
 
-    NewestSliderAdapter(List<NewestSliderItem> newestSliderItems, ViewPager2 viewPager2) {
+    NewestSliderAdapter(List<NewestSliderItem> newestSliderItems, ViewPager2 viewPager2)
+    {
         this.newestSliderItems = newestSliderItems;
         this.viewPager2 = viewPager2;
     }
 
     @NonNull
     @Override
-    public NewestSliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NewestSliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
         return new NewestSliderViewHolder(
                 LayoutInflater.from(parent.getContext()).inflate(
                         R.layout.newest_slider_item,
@@ -36,12 +37,11 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NewestSliderViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull NewestSliderViewHolder holder, int position)
+    {
         holder.setImage(newestSliderItems.get(position));
-        if(position == newestSliderItems.size() - 2)
-        {
-            viewPager2.post(runnable) ;
-        }
+
+        if(position == newestSliderItems.size() - 2) viewPager2.post(runnable);
     }
 
     @Override
@@ -49,11 +49,12 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
         return newestSliderItems.size();
     }
 
-    class NewestSliderViewHolder extends RecyclerView.ViewHolder {
-
+    class NewestSliderViewHolder extends RecyclerView.ViewHolder
+    {
         private RoundedImageView imageView;
 
-        NewestSliderViewHolder(@NonNull View itemView) {
+        NewestSliderViewHolder(@NonNull View itemView)
+        {
             super(itemView);
             imageView = itemView.findViewById(R.id.newest_slider_item);
         }
@@ -66,9 +67,11 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
         }
     }
 
-    private Runnable runnable = new Runnable() {
+    private Runnable runnable = new Runnable()
+    {
         @Override
-        public void run() {
+        public void run()
+        {
             newestSliderItems.addAll(newestSliderItems);
             notifyDataSetChanged();
         }
