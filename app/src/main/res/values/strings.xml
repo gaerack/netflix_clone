@@ -11,4 +11,11 @@
     <string name="cd_mylist">My List Button</string>
     <string name="tv_popular">Popular</string>
     <string name="cd_popular">Popular Button</string>
+    <string name="cd_detail_back">Back Button On Detail Activity</string>
+    <string name="cd_detail_search">Search Button On Detail Activity</string>
+    <string name="cd_detail_play">Play Button On Detail Activity</string>
+    <string name="cd_detail_add">Add Button On Detail Activity</string>
+    <string name="cd_detail_share">Share Button On Detail Activity</string>
+    <string name="hs_detail_title">THE NUTCRACKER AND THE FOUR REALMS</string>
+    <string name="hs_detail_genre">Adventure, Family, Fantasy</string>
 </resources>

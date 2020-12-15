@@ -1,6 +1,5 @@
 package com.android.netflixclone;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -9,7 +8,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
         CompositePageTransformer cptNewest = new CompositePageTransformer();
         cptNewest.addTransformer(new MarginPageTransformer(40));
-        cptNewest.addTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                float r = 1 - Math.abs(position);
-                page.setScaleY(0.85f + r * 0.15f);
-            }
+        cptNewest.addTransformer((page, position) -> {
+            float r = 1 - Math.abs(position);
+            page.setScaleY(0.85f + r * 0.15f);
         });
 
         viewPagerNewestSlider.setPageTransformer(cptNewest);
@@ -90,9 +85,7 @@ public class MainActivity extends AppCompatActivity {
         float offsetPx = screenWidth - pageMarginPx - pagerWidth;
 
         CompositePageTransformer cptMyList = new CompositePageTransformer();
-        cptMyList.addTransformer((page, position) -> {
-            page.setTranslationX(position * -offsetPx);
-        });
+        cptMyList.addTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
 
         viewPagerMyListSlider.setPageTransformer(cptMyList);
 
@@ -113,14 +106,12 @@ public class MainActivity extends AppCompatActivity {
         viewPagerPopularSlider.setCurrentItem(1);
 
         CompositePageTransformer cptPopular = new CompositePageTransformer();
-        cptPopular.addTransformer((page, position) -> {
-            page.setTranslationX(position * -offsetPx);
-        });
+        cptPopular.addTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
 
         viewPagerPopularSlider.setPageTransformer(cptPopular);
     }
 
-    private Runnable sliderRunnable = new Runnable() {
+    final Runnable sliderRunnable = new Runnable() {
         @Override
         public void run() {
             viewPagerNewestSlider.setCurrentItem(viewPagerNewestSlider.getCurrentItem() + 1);

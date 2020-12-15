@@ -8,8 +8,9 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <!-- Toolbar -->
     <LinearLayout
-        android:id="@+id/layout_toolbar"
+        android:id="@+id/layout_main_toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#673AB7"
@@ -43,6 +44,7 @@
 
     </LinearLayout>
 
+    <!-- Content -->
     <ScrollView
         android:id="@+id/sv_content"
         android:layout_width="match_parent"
@@ -54,6 +56,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Newest -->
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vp_newest_slider"
                 android:layout_width="match_parent"
@@ -63,6 +66,7 @@
 
             </androidx.viewpager2.widget.ViewPager2>
 
+            <!-- Category Buttons -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -114,6 +118,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- My List -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -150,6 +155,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp" />
 
+            <!-- Popular -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -176,6 +182,7 @@
                     android:contentDescription="@string/cd_popular"
                     android:tint="#000000"
                     app:srcCompat="@drawable/abc_vector_test" />
+
             </LinearLayout>
 
             <androidx.viewpager2.widget.ViewPager2
@@ -186,6 +193,7 @@
                 android:paddingEnd="10dp" />
 
         </LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>
