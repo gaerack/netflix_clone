@@ -9,4 +9,6 @@
     <string name="btn_new">NEW</string>
     <string name="tv_mylist">My List</string>
     <string name="cd_mylist">My List Button</string>
+    <string name="tv_popular">Popular</string>
+    <string name="cd_popular">Popular Button</string>
 </resources>

@@ -20,7 +20,11 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager2 viewPagerNewestSlider;
     private Handler newestSliderHandler = new Handler();
 
-    private ViewPager2 viewPagerMyList;
+    /* My List Slider */
+    private ViewPager2 viewPagerMyListSlider;
+
+    /* Popular Slider */
+    private ViewPager2 viewPagerPopularSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,24 +68,45 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /* My List Slider */
-        viewPagerMyList = findViewById(R.id.vp_mylist);
+        viewPagerMyListSlider = findViewById(R.id.vp_mylist);
 
-        List<CardSliderItem> cardSliderItems = new ArrayList<>();
-        cardSliderItems.add(new CardSliderItem(R.drawable.shigatsu_wa_kimi_no_uso));
-        cardSliderItems.add(new CardSliderItem(R.drawable.seven_deadly_sins));
-        cardSliderItems.add(new CardSliderItem(R.drawable.cobra_kai));
-        cardSliderItems.add(new CardSliderItem(R.drawable.erased));
-        cardSliderItems.add(new CardSliderItem(R.drawable.plastic_memories));
+        List<CardSliderItem> myListSliderItems = new ArrayList<>();
+        myListSliderItems.add(new CardSliderItem(R.drawable.shigatsu_wa_kimi_no_uso));
+        myListSliderItems.add(new CardSliderItem(R.drawable.seven_deadly_sins));
+        myListSliderItems.add(new CardSliderItem(R.drawable.cobra_kai));
+        myListSliderItems.add(new CardSliderItem(R.drawable.erased));
+        myListSliderItems.add(new CardSliderItem(R.drawable.plastic_memories));
 
-        viewPagerMyList.setAdapter(new CardSliderAdapter(cardSliderItems));
-        viewPagerMyList.setClipToPadding(false);
-        viewPagerMyList.setClipChildren(false);
-        viewPagerMyList.setOffscreenPageLimit(5);
+        viewPagerMyListSlider.setAdapter(new CardSliderAdapter(myListSliderItems));
+        viewPagerMyListSlider.setClipToPadding(false);
+        viewPagerMyListSlider.setClipChildren(false);
+        viewPagerMyListSlider.setOffscreenPageLimit(5);
+        viewPagerMyListSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
 
         CompositePageTransformer cptMyList = new CompositePageTransformer();
         cptMyList.addTransformer(new MarginPageTransformer(10));
 
-        viewPagerMyList.setPageTransformer(cptMyList);
+        viewPagerMyListSlider.setPageTransformer(cptMyList);
+
+        /* Popular Slider */
+        viewPagerPopularSlider = findViewById(R.id.vp_popular);
+
+        List<CardSliderItem> popularSliderItems = new ArrayList<>();
+        popularSliderItems.add(new CardSliderItem(R.drawable.stranger_things));
+        popularSliderItems.add(new CardSliderItem(R.drawable.endgame));
+        popularSliderItems.add(new CardSliderItem(R.drawable.oitnb));
+        popularSliderItems.add(new CardSliderItem(R.drawable.daredevil));
+
+        viewPagerPopularSlider.setAdapter(new CardSliderAdapter(popularSliderItems));
+        viewPagerPopularSlider.setClipToPadding(false);
+        viewPagerPopularSlider.setClipChildren(false);
+        viewPagerPopularSlider.setOffscreenPageLimit(4);
+        viewPagerPopularSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+
+        CompositePageTransformer cptPopular = new CompositePageTransformer();
+        cptPopular.addTransformer(new MarginPageTransformer(10));
+
+        viewPagerPopularSlider.setPageTransformer(cptPopular);
     }
 
     private Runnable sliderRunnable = new Runnable() {
