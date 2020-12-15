@@ -146,9 +146,9 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vp_mylist"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="250dp"
                 android:paddingStart="10dp"
-                android:paddingEnd="40dp" />
+                android:paddingEnd="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -181,9 +181,9 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vp_popular"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="250dp"
                 android:paddingStart="10dp"
-                android:paddingEnd="40dp" />
+                android:paddingEnd="10dp" />
 
         </LinearLayout>
     </ScrollView>

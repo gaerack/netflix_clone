@@ -80,11 +80,19 @@ public class MainActivity extends AppCompatActivity {
         viewPagerMyListSlider.setAdapter(new CardSliderAdapter(myListSliderItems));
         viewPagerMyListSlider.setClipToPadding(false);
         viewPagerMyListSlider.setClipChildren(false);
-        viewPagerMyListSlider.setOffscreenPageLimit(5);
+        viewPagerMyListSlider.setOffscreenPageLimit(3);
         viewPagerMyListSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+        viewPagerMyListSlider.setCurrentItem(1);
+
+        float pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
+        float pagerWidth = getResources().getDimensionPixelOffset(R.dimen.pagerWidth);
+        float screenWidth = getResources().getDisplayMetrics().widthPixels;
+        float offsetPx = screenWidth - pageMarginPx - pagerWidth;
 
         CompositePageTransformer cptMyList = new CompositePageTransformer();
-        cptMyList.addTransformer(new MarginPageTransformer(10));
+        cptMyList.addTransformer((page, position) -> {
+            page.setTranslationX(position * -offsetPx);
+        });
 
         viewPagerMyListSlider.setPageTransformer(cptMyList);
 
@@ -100,11 +108,14 @@ public class MainActivity extends AppCompatActivity {
         viewPagerPopularSlider.setAdapter(new CardSliderAdapter(popularSliderItems));
         viewPagerPopularSlider.setClipToPadding(false);
         viewPagerPopularSlider.setClipChildren(false);
-        viewPagerPopularSlider.setOffscreenPageLimit(4);
+        viewPagerPopularSlider.setOffscreenPageLimit(3);
         viewPagerPopularSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+        viewPagerPopularSlider.setCurrentItem(1);
 
         CompositePageTransformer cptPopular = new CompositePageTransformer();
-        cptPopular.addTransformer(new MarginPageTransformer(10));
+        cptPopular.addTransformer((page, position) -> {
+            page.setTranslationX(position * -offsetPx);
+        });
 
         viewPagerPopularSlider.setPageTransformer(cptPopular);
     }
