@@ -1,5 +1,6 @@
 package com.android.netflixclone;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,17 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
         {
             super(itemView);
             imageView = itemView.findViewById(R.id.newest_slider_item);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION)
+                    {
+                        Intent intent = new Intent(itemView.getContext(), DetailActivity.class);
+                        itemView.getContext().startActivity(intent);
+                    }
+                }
+            });
         }
 
         void setImage(NewestSliderItem newestSliderItem)

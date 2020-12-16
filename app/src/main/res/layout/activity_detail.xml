@@ -20,6 +20,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/detail_rep_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cropToPadding="false"
+                android:scaleType="center"
+                android:src="@drawable/nutcracker"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_corner_radius_bottom_left="100dp"
+                app:riv_corner_radius_bottom_right="100dp"
+                tools:src="@drawable/nutcracker" />
+
             <ImageButton
                 android:id="@+id/ib_detail_back"
                 android:layout_width="wrap_content"
@@ -46,18 +59,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@android:drawable/ic_menu_search" />
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/detail_rep_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:cropToPadding="false"
-                android:scaleType="center"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:riv_corner_radius_bottom_left="100dp"
-                app:riv_corner_radius_bottom_right="100dp"
-                tools:src="@drawable/nutcracker" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -274,7 +275,8 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_screenshots"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="150dp"
+            android:layout_marginBottom="20dp" />
 
     </LinearLayout>
 
