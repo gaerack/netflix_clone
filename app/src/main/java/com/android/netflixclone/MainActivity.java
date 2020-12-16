@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
         // Here, i'm preparing list of images from drawable
         // You can get it from API as well
         List<NewestSliderItem> newestSliderItems = new ArrayList<>();
-        newestSliderItems.add(new NewestSliderItem(R.drawable.spiderman));
-        newestSliderItems.add(new NewestSliderItem(R.drawable.nutcracker));
-        newestSliderItems.add(new NewestSliderItem(R.drawable.toystory));
+        newestSliderItems.add(new NewestSliderItem(R.drawable.spiderman, "SPIDER-MAN: FAR FROM HOME"));
+        newestSliderItems.add(new NewestSliderItem(R.drawable.nutcracker, "THE NUTCRACKER AND THE FOUR REALMS"));
+        newestSliderItems.add(new NewestSliderItem(R.drawable.toystory, "TOY STORY 4"));
 
         viewPagerNewestSlider.setAdapter(new NewestSliderAdapter(newestSliderItems, viewPagerNewestSlider));
         viewPagerNewestSlider.setClipToPadding(false);
@@ -45,8 +45,13 @@ public class MainActivity extends AppCompatActivity {
         viewPagerNewestSlider.setOffscreenPageLimit(3);
         viewPagerNewestSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
 
+        float pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
+        float newestViewPagerWidth = getResources().getDimensionPixelOffset(R.dimen.newestPagerWidth);
+        float screenWidth = getResources().getDisplayMetrics().widthPixels;
+        float newestOffsetPx = screenWidth - pageMarginPx - newestViewPagerWidth;
+
         CompositePageTransformer cptNewest = new CompositePageTransformer();
-        cptNewest.addTransformer(new MarginPageTransformer(40));
+        cptNewest.addTransformer((page, position) -> page.setTranslationX(position * -newestOffsetPx));
         cptNewest.addTransformer((page, position) -> {
             float r = 1 - Math.abs(position);
             page.setScaleY(0.85f + r * 0.15f);
@@ -79,13 +84,11 @@ public class MainActivity extends AppCompatActivity {
         viewPagerMyListSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
         viewPagerMyListSlider.setCurrentItem(1);
 
-        float pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
-        float pagerWidth = getResources().getDimensionPixelOffset(R.dimen.pagerWidth);
-        float screenWidth = getResources().getDisplayMetrics().widthPixels;
-        float offsetPx = screenWidth - pageMarginPx - pagerWidth;
+        float myListViewPagerWidth = getResources().getDimensionPixelOffset(R.dimen.pagerWidth);
+        float myListOffsetPx = screenWidth - pageMarginPx - myListViewPagerWidth;
 
         CompositePageTransformer cptMyList = new CompositePageTransformer();
-        cptMyList.addTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
+        cptMyList.addTransformer((page, position) -> page.setTranslationX(position * -myListOffsetPx));
 
         viewPagerMyListSlider.setPageTransformer(cptMyList);
 
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         viewPagerPopularSlider.setCurrentItem(1);
 
         CompositePageTransformer cptPopular = new CompositePageTransformer();
-        cptPopular.addTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
+        cptPopular.addTransformer((page, position) -> page.setTranslationX(position * -myListOffsetPx));
 
         viewPagerPopularSlider.setPageTransformer(cptPopular);
     }

@@ -2,8 +2,10 @@ package com.android.netflixclone;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,8 +17,8 @@ import java.util.List;
 
 public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapter.NewestSliderViewHolder>
 {
-    private List<NewestSliderItem> newestSliderItems;
-    private ViewPager2 viewPager2;
+    final List<NewestSliderItem> newestSliderItems;
+    final ViewPager2 viewPager2;
 
     NewestSliderAdapter(List<NewestSliderItem> newestSliderItems, ViewPager2 viewPager2)
     {
@@ -41,7 +43,7 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
     public void onBindViewHolder(@NonNull NewestSliderViewHolder holder, int position)
     {
         holder.setImage(newestSliderItems.get(position));
-
+        holder.setTitle(newestSliderItems.get(position));
         if(position == newestSliderItems.size() - 2) viewPager2.post(runnable);
     }
 
@@ -50,25 +52,25 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
         return newestSliderItems.size();
     }
 
-    class NewestSliderViewHolder extends RecyclerView.ViewHolder
+    static class NewestSliderViewHolder extends RecyclerView.ViewHolder
     {
-        private RoundedImageView imageView;
+        final RoundedImageView imageView;
+        final TextView textView;
 
         NewestSliderViewHolder(@NonNull View itemView)
         {
             super(itemView);
-            imageView = itemView.findViewById(R.id.newest_slider_item);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    if(position != RecyclerView.NO_POSITION)
-                    {
-                        Intent intent = new Intent(itemView.getContext(), DetailActivity.class);
-                        itemView.getContext().startActivity(intent);
-                    }
+            imageView = itemView.findViewById(R.id.riv_newest_image);
+            imageView.setOnClickListener(view -> {
+                int position = getAdapterPosition();
+                if(position != RecyclerView.NO_POSITION)
+                {
+                    Intent intent = new Intent(itemView.getContext(), DetailActivity.class);
+                    itemView.getContext().startActivity(intent);
                 }
             });
+
+            textView = itemView.findViewById(R.id.tv_newest_title);
         }
 
         void setImage(NewestSliderItem newestSliderItem)
@@ -77,9 +79,16 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
             // You can put code here using glide or picasso.
             imageView.setImageResource(newestSliderItem.getImage());
         }
+
+        void setTitle(NewestSliderItem newestSliderItem)
+        {
+            // If you want to display image from the internet
+            // You can put code here using glide or picasso.
+            textView.setText(newestSliderItem.getTitle());
+        }
     }
 
-    private Runnable runnable = new Runnable()
+    final Runnable runnable = new Runnable()
     {
         @Override
         public void run()

@@ -48,7 +48,8 @@
     <ScrollView
         android:id="@+id/sv_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="20dp">
 
         <LinearLayout
             android:id="@+id/layout_sv"
@@ -60,65 +61,71 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vp_newest_slider"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="20dp"
                 android:paddingStart="80dp"
-                android:paddingEnd="80dp">
+                android:paddingTop="10dp"
+                android:paddingEnd="80dp"
+                android:paddingBottom="10dp">
 
             </androidx.viewpager2.widget.ViewPager2>
 
-            <!-- Category Buttons -->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
-                <Button
-                    android:id="@+id/btn_discover"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/btn_discover"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btn_categories"
-                    app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btn_categories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/btn_categories"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btn_specials"
-                    app:layout_constraintStart_toEndOf="@+id/btn_discover"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_discover"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/category_button"
+                        android:text="@string/btn_discover"
+                        android:textColor="#FFFFFF" />
 
-                <Button
-                    android:id="@+id/btn_specials"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/btn_specials"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_new"
-                    app:layout_constraintStart_toEndOf="@+id/btn_categories"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_categories"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/category_button"
+                        android:text="@string/btn_categories"
+                        android:textColor="#FFFFFF" />
 
-                <Button
-                    android:id="@+id/btn_new"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/btn_new"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/btn_specials"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_specials"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/category_button"
+                        android:text="@string/btn_specials"
+                        android:textColor="#FFFFFF" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_new"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/category_button"
+                        android:text="@string/btn_new"
+                        android:textColor="#FFFFFF" />
 
-            <!-- My List -->
+                </LinearLayout>
+            </HorizontalScrollView>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -155,7 +162,6 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp" />
 
-            <!-- Popular -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -191,6 +197,12 @@
                 android:layout_height="250dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp" />
+
+            <!-- Category Buttons -->
+
+            <!-- My List -->
+
+            <!-- Popular -->
 
         </LinearLayout>
 

@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.makeramen.roundedimageview.RoundedImageView
+
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/newest_slider_item"
+    android:id="@+id/layout_newest"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:adjustViewBounds="true"
-    app:riv_corner_radius="12dp">
+    android:scaleX="1.2"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="15dp">
 
-</com.makeramen.roundedimageview.RoundedImageView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/riv_newest_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:scaleY="1.2">
+
+        </com.makeramen.roundedimageview.RoundedImageView>
+
+        <TextView
+            android:id="@+id/tv_newest_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:paddingStart="10dp"
+            android:paddingEnd="30dp"
+            android:paddingBottom="10dp"
+            android:scaleY="1.2"
+            android:textAlignment="viewStart"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>
