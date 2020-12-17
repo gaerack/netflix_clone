@@ -3,11 +3,16 @@ package com.android.netflixclone;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
-import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +21,16 @@ public class MainActivity extends AppCompatActivity {
 
     /* Newest Slider */
     private ViewPager2 viewPagerNewestSlider;
-    private Handler newestSliderHandler = new Handler();
+    final Handler newestSliderHandler = new Handler();
 
     /* My List Slider */
     private ViewPager2 viewPagerMyListSlider;
 
     /* Popular Slider */
     private ViewPager2 viewPagerPopularSlider;
+
+    /* Firebase */
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,26 +39,39 @@ public class MainActivity extends AppCompatActivity {
 
         /* Newest Slider */
         viewPagerNewestSlider = findViewById(R.id.vp_newest_slider);
-
-        // Here, i'm preparing list of images from drawable
-        // You can get it from API as well
         List<NewestSliderItem> newestSliderItems = new ArrayList<>();
-        newestSliderItems.add(new NewestSliderItem(R.drawable.spiderman, "SPIDER-MAN: FAR FROM HOME"));
-        newestSliderItems.add(new NewestSliderItem(R.drawable.nutcracker, "THE NUTCRACKER AND THE FOUR REALMS"));
-        newestSliderItems.add(new NewestSliderItem(R.drawable.toystory, "TOY STORY 4"));
+        CollectionReference colRef = db.collection("movies");
 
-        viewPagerNewestSlider.setAdapter(new NewestSliderAdapter(newestSliderItems, viewPagerNewestSlider));
+        colRef.orderBy("year", Query.Direction.DESCENDING).limit(3).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful())
+            {
+                for (QueryDocumentSnapshot document : task.getResult())
+                {
+                    Log.d("Movies", document.getString("title")); // D/Movies
+                    newestSliderItems.add(new NewestSliderItem(document.getId(), document.getString("title")));
+                }
+                //initNewestSlider(newestSliderItems);
+            }
+            else
+                {
+                Log.d("Movies", "Error getting documents: ", task.getException());
+            }
+        });
+
+        //newestSliderItems.add(new NewestSliderItem(R.drawable.spiderman_far_from_home, "SPIDER-MAN: FAR FROM HOME"));
+        //newestSliderItems.add(new NewestSliderItem(R.drawable.nutcracker, "THE NUTCRACKER AND THE FOUR REALMS"));
+        //newestSliderItems.add(new NewestSliderItem(R.drawable.toy_story_4, "TOY STORY 4"));
+
+        /*viewPagerNewestSlider.setAdapter(new NewestSliderAdapter(newestSliderItems, viewPagerNewestSlider));
         viewPagerNewestSlider.setClipToPadding(false);
         viewPagerNewestSlider.setClipChildren(false);
         viewPagerNewestSlider.setOffscreenPageLimit(3);
         viewPagerNewestSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
 
-        float pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
         float newestViewPagerWidth = getResources().getDimensionPixelOffset(R.dimen.newestPagerWidth);
-        float screenWidth = getResources().getDisplayMetrics().widthPixels;
-        float newestOffsetPx = screenWidth - pageMarginPx - newestViewPagerWidth;
+        float newestOffsetPx = SCREEN_WIDTH - PAGE_MARGIN_PX - newestViewPagerWidth;
 
-        CompositePageTransformer cptNewest = new CompositePageTransformer();
+        /*CompositePageTransformer cptNewest = new CompositePageTransformer();
         cptNewest.addTransformer((page, position) -> page.setTranslationX(position * -newestOffsetPx));
         cptNewest.addTransformer((page, position) -> {
             float r = 1 - Math.abs(position);
@@ -65,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 newestSliderHandler.removeCallbacks(sliderRunnable);
                 newestSliderHandler.postDelayed(sliderRunnable, 2000);
             }
-        });
+        });*/
 
         /* My List Slider */
         viewPagerMyListSlider = findViewById(R.id.vp_mylist);
@@ -84,8 +105,10 @@ public class MainActivity extends AppCompatActivity {
         viewPagerMyListSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
         viewPagerMyListSlider.setCurrentItem(1);
 
+        float PAGE_MARGIN_PX = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
+        float SCREEN_WIDTH = getResources().getDisplayMetrics().widthPixels;
         float myListViewPagerWidth = getResources().getDimensionPixelOffset(R.dimen.pagerWidth);
-        float myListOffsetPx = screenWidth - pageMarginPx - myListViewPagerWidth;
+        float myListOffsetPx = SCREEN_WIDTH - PAGE_MARGIN_PX - myListViewPagerWidth;
 
         CompositePageTransformer cptMyList = new CompositePageTransformer();
         cptMyList.addTransformer((page, position) -> page.setTranslationX(position * -myListOffsetPx));
@@ -114,13 +137,6 @@ public class MainActivity extends AppCompatActivity {
         viewPagerPopularSlider.setPageTransformer(cptPopular);
     }
 
-    final Runnable sliderRunnable = new Runnable() {
-        @Override
-        public void run() {
-            viewPagerNewestSlider.setCurrentItem(viewPagerNewestSlider.getCurrentItem() + 1);
-        }
-    };
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -132,4 +148,38 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         newestSliderHandler.postDelayed(sliderRunnable, 2000);
     }
+
+    /* Newest Slider */
+    private void initNewestSlider(List<NewestSliderItem> fetchedNewestSliderItems)
+    {
+        CompositePageTransformer cptNewest = new CompositePageTransformer();
+        float PAGE_MARGIN_PX = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
+        float SCREEN_WIDTH = getResources().getDisplayMetrics().widthPixels;
+        float newestViewPagerWidth = getResources().getDimensionPixelOffset(R.dimen.newestPagerWidth);
+        float newestOffsetPx = SCREEN_WIDTH - PAGE_MARGIN_PX - newestViewPagerWidth;
+
+        viewPagerNewestSlider.setAdapter(new NewestSliderAdapter(fetchedNewestSliderItems, viewPagerNewestSlider));
+        viewPagerNewestSlider.setClipToPadding(false);
+        viewPagerNewestSlider.setClipChildren(false);
+        viewPagerNewestSlider.setOffscreenPageLimit(3);
+        viewPagerNewestSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+
+        cptNewest.addTransformer((page, position) -> page.setTranslationX(position * -newestOffsetPx));
+        cptNewest.addTransformer((page, position) -> {
+            float r = 1 - Math.abs(position);
+            page.setScaleY(0.85f + r * 0.15f);
+        });
+
+        viewPagerNewestSlider.setPageTransformer(cptNewest);
+        viewPagerNewestSlider.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                newestSliderHandler.removeCallbacks(sliderRunnable);
+                newestSliderHandler.postDelayed(sliderRunnable, 2000);
+            }
+        });
+    }
+
+    final Runnable sliderRunnable = () -> viewPagerNewestSlider.setCurrentItem(viewPagerNewestSlider.getCurrentItem() + 1);
 }

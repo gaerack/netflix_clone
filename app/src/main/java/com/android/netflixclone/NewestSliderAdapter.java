@@ -1,8 +1,9 @@
 package com.android.netflixclone;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -42,8 +45,9 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
     @Override
     public void onBindViewHolder(@NonNull NewestSliderViewHolder holder, int position)
     {
-        holder.setImage(newestSliderItems.get(position));
+        holder.setImage(holder.itemView.getContext(), newestSliderItems.get(position));
         holder.setTitle(newestSliderItems.get(position));
+
         if(position == newestSliderItems.size() - 2) viewPager2.post(runnable);
     }
 
@@ -56,6 +60,7 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
     {
         final RoundedImageView imageView;
         final TextView textView;
+        FirebaseStorage storage = FirebaseStorage.getInstance();
 
         NewestSliderViewHolder(@NonNull View itemView)
         {
@@ -73,11 +78,14 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
             textView = itemView.findViewById(R.id.tv_newest_title);
         }
 
-        void setImage(NewestSliderItem newestSliderItem)
+        void setImage(Context context, NewestSliderItem newestSliderItem)
         {
             // If you want to display image from the internet
             // You can put code here using glide or picasso.
-            imageView.setImageResource(newestSliderItem.getImage());
+            //imageView.setImageResource(newestSliderItem.getImage());
+            storage.getReference(newestSliderItem.getStorageRef()).getDownloadUrl().addOnSuccessListener(uri -> Glide.with(context)
+                    .load(uri)
+                    .into(imageView));
         }
 
         void setTitle(NewestSliderItem newestSliderItem)
