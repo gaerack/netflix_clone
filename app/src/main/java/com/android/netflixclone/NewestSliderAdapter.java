@@ -3,6 +3,7 @@ package com.android.netflixclone;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -83,9 +86,10 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
             // If you want to display image from the internet
             // You can put code here using glide or picasso.
             //imageView.setImageResource(newestSliderItem.getImage());
-            storage.getReference(newestSliderItem.getStorageRef()).getDownloadUrl().addOnSuccessListener(uri -> Glide.with(context)
-                    .load(uri)
-                    .into(imageView));
+            StorageReference storageRef = storage.getReferenceFromUrl(newestSliderItem.getStorageRef());
+            storageRef.getDownloadUrl().addOnSuccessListener(uri ->
+                    Glide.with(context).load(uri).into(imageView)
+            );
         }
 
         void setTitle(NewestSliderItem newestSliderItem)

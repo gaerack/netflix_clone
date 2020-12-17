@@ -1,5 +1,6 @@
 package com.android.netflixclone;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -9,6 +10,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -31,17 +37,18 @@ public class MainActivity extends AppCompatActivity {
 
     /* Firebase */
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance(); // FirebaseAuth
 
         /* Newest Slider */
         viewPagerNewestSlider = findViewById(R.id.vp_newest_slider);
         List<NewestSliderItem> newestSliderItems = new ArrayList<>();
         CollectionReference colRef = db.collection("movies");
-
         colRef.orderBy("year", Query.Direction.DESCENDING).limit(3).get().addOnCompleteListener(task -> {
             if (task.isSuccessful())
             {
@@ -50,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Movies", document.getString("title")); // D/Movies
                     newestSliderItems.add(new NewestSliderItem(document.getId(), document.getString("title")));
                 }
-                //initNewestSlider(newestSliderItems);
+                initNewestSlider(newestSliderItems);
             }
             else
-                {
+            {
                 Log.d("Movies", "Error getting documents: ", task.getException());
             }
         });
@@ -135,6 +142,12 @@ public class MainActivity extends AppCompatActivity {
         cptPopular.addTransformer((page, position) -> page.setTranslationX(position * -myListOffsetPx));
 
         viewPagerPopularSlider.setPageTransformer(cptPopular);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.signInAnonymously();
     }
 
     @Override
