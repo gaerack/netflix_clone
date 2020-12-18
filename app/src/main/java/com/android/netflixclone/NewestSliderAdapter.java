@@ -17,11 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +32,7 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
 {
     final List<NewestSliderItem> newestSliderItems;
     final ViewPager2 viewPager2;
+    String repImageURL;
 
     NewestSliderAdapter(List<NewestSliderItem> newestSliderItems, ViewPager2 viewPager2)
     {
@@ -69,6 +73,7 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
         final RoundedImageView imageView;
         final TextView textView;
         FirebaseStorage storage = FirebaseStorage.getInstance();
+        Uri repImageURL;
 
         NewestSliderViewHolder(@NonNull View itemView)
         {
@@ -83,6 +88,7 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
                     Intent intent = new Intent(itemView.getContext(), DetailActivity.class);
                     intent.putExtra("movieID", (String)textView.getTag());
                     intent.putExtra("title", (String)textView.getText());
+                    intent.putExtra("repImageURL", repImageURL);
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)itemView.getContext(), imageView, Objects.requireNonNull(ViewCompat.getTransitionName(imageView)));
                     itemView.getContext().startActivity(intent, options.toBundle());
                     //itemView.getContext().startActivity(intent);
@@ -96,11 +102,12 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
             // If you want to display image from the internet
             // You can put code here using glide or picasso.
             //imageView.setImageResource(newestSliderItem.getImage());
-            Glide.with(context).load(R.drawable.newest_placeholder).into(imageView);
+            //Glide.with(context).load(R.drawable.newest_placeholder).into(imageView);
             StorageReference storageRef = storage.getReferenceFromUrl(newestSliderItem.getStorageRef());
-            storageRef.getDownloadUrl().addOnSuccessListener(uri ->
-                    Glide.with(context).load(uri).into(imageView)
-            );
+            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                repImageURL = uri;
+                Glide.with(context).load(uri).into(imageView);
+            });
         }
 
         void setTitle(NewestSliderItem newestSliderItem)

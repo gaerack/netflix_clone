@@ -2,7 +2,6 @@ package com.android.netflixclone;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
@@ -15,12 +14,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +46,12 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final String movieID = intent.getExtras().getString("movieID");
         final String title = intent.getExtras().getString("title");
+        final Uri repImageURL = (Uri) intent.getExtras().get("repImageURL");
 
         /* View */
+        ImageView ivDetailRepImage = findViewById(R.id.iv_detail_rep_image);
+        Glide.with(this).load(repImageURL).into(ivDetailRepImage);
+
         ImageButton ibDetailPlay = findViewById(R.id.ib_detail_play);
 
         TextView tvDetailTitle = findViewById(R.id.tv_detail_title);
@@ -56,11 +63,11 @@ public class DetailActivity extends AppCompatActivity {
         TextView tvDetailYear = findViewById(R.id.tv_detail_year);
         TextView tvDetailCountry = findViewById(R.id.tv_detail_country);
         TextView tvDetailLength = findViewById(R.id.tv_detail_length);
+        TextView tvDetailDesc = findViewById(R.id.tv_detail_desc);
 
         // Firebase
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("movies").document(movieID);
-
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful())
             {
@@ -75,13 +82,13 @@ public class DetailActivity extends AppCompatActivity {
                 for(String genre : genreArray)
                     mergedGenre += genre+"  ";
 
-                //rbRating.setRating((Float) document.get("rating"));
+                rbRating.setRating(Float.valueOf(String.valueOf(document.get("rating"))));
 
                 tvDetailGenre.setText(mergedGenre);
-                //tvDetailYear.setText(document.getLong("year")+"");
-                //tvDetailCountry.setText(document.getString("country"));
-                //tvDetailLength.setText(document.getLong("length")+" min");
-
+                tvDetailYear.setText(String.valueOf(document.getLong("year")));
+                tvDetailCountry.setText(convertContryCodeToString(Integer.valueOf(String.valueOf(document.getLong("country")))));
+                tvDetailLength.setText(document.getLong("length")+" min");
+                tvDetailDesc.setText(document.getString("desc"));
             }
             else
             {
@@ -148,5 +155,20 @@ public class DetailActivity extends AppCompatActivity {
         view.startAnimation(animate);
     }
 
-    
+    private String convertContryCodeToString(int countryCode)
+    {
+        String countryString = "";
+
+        switch(countryCode)
+        {
+            case 1:
+                countryString = "USA";
+                break;
+            case 82:
+                countryString = "KOREA";
+                break;
+        }
+
+        return countryString;
+    }
 }

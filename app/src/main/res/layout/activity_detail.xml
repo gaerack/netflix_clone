@@ -18,12 +18,13 @@
             android:layout_height="wrap_content">
 
             <!-- Rep Image -->
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/detail_rep_image"
+            <ImageView
+                android:id="@+id/iv_detail_rep_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="250dp"
+                android:contentDescription="@string/cd_detail_rep_image"
                 android:cropToPadding="false"
-                android:scaleType="center"
+                android:scaleType="centerCrop"
                 android:src="@drawable/newest_placeholder"
                 android:transitionName="rep_image_transition"
                 app:layout_constraintStart_toStartOf="parent"
