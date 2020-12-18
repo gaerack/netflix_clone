@@ -20,7 +20,8 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:scaleY="1.2">
+            android:scaleY="1.2"
+            android:transitionName="rep_image_transition">
 
         </com.makeramen.roundedimageview.RoundedImageView>
 

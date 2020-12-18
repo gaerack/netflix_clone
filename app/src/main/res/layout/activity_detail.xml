@@ -13,34 +13,33 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Rep Image -->
-
-        <!-- Play Button -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- Rep Image -->
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/detail_rep_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:cropToPadding="false"
                 android:scaleType="center"
-                android:src="@drawable/nutcracker"
+                android:src="@drawable/newest_placeholder"
+                android:transitionName="rep_image_transition"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:riv_corner_radius_bottom_left="100dp"
-                app:riv_corner_radius_bottom_right="100dp"
-                tools:src="@drawable/nutcracker" />
+                tools:src="@drawable/newest_placeholder" />
 
             <ImageButton
                 android:id="@+id/ib_detail_back"
+                style="@style/Widget.AppCompat.ImageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:background="#00FFFFFF"
                 android:contentDescription="@string/cd_detail_back"
                 android:padding="10dp"
+                android:scaleType="center"
                 android:tint="#000000"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -62,6 +61,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- Play Button -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,7 +82,6 @@
         </LinearLayout>
 
         <!-- Add and Share Buttons -->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -191,7 +190,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/textView7"
+                    android:id="@+id/tv_detail_country"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/hs_detail_country"
@@ -216,7 +215,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/textView9"
+                    android:id="@+id/tv_detail_length"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/hs_detail_length"
