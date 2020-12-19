@@ -32,7 +32,6 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
 {
     final List<NewestSliderItem> newestSliderItems;
     final ViewPager2 viewPager2;
-    String repImageURL;
 
     NewestSliderAdapter(List<NewestSliderItem> newestSliderItems, ViewPager2 viewPager2)
     {

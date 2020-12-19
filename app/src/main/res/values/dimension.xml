@@ -3,5 +3,5 @@
     <dimen name="pageMargin">20dp</dimen>
     <dimen name="pagerWidth">200dp</dimen>
     <dimen name="newestPagerWidth">395dp</dimen>
-    <dimen name="screenshotPagerWidth">230dp</dimen>
+    <dimen name="screenshotPagerWidth">240dp</dimen>
 </resources>

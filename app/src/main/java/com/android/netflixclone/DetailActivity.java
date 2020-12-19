@@ -1,5 +1,6 @@
 package com.android.netflixclone;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,8 +23,8 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,11 +83,11 @@ public class DetailActivity extends AppCompatActivity {
                 for(String genre : genreArray)
                     mergedGenre += genre+"  ";
 
-                rbRating.setRating(Float.valueOf(String.valueOf(document.get("rating"))));
+                rbRating.setRating(Float.parseFloat(String.valueOf(document.get("rating"))));
 
                 tvDetailGenre.setText(mergedGenre);
                 tvDetailYear.setText(String.valueOf(document.getLong("year")));
-                tvDetailCountry.setText(convertContryCodeToString(Integer.valueOf(String.valueOf(document.getLong("country")))));
+                tvDetailCountry.setText(convertContryCodeToString(Integer.parseInt(String.valueOf(document.getLong("country")))));
                 tvDetailLength.setText(document.getLong("length")+" min");
                 tvDetailDesc.setText(document.getString("desc"));
             }
@@ -99,27 +100,25 @@ public class DetailActivity extends AppCompatActivity {
         /* Screenshots Slider */
         ViewPager2 viewPagerScreenshotsSlider = findViewById(R.id.vp_screenshots);
 
-        List<CardSliderItem> screenshotsSliderItems = new ArrayList<>();
-        screenshotsSliderItems.add(new CardSliderItem(R.drawable.nutcracker_0));
-        screenshotsSliderItems.add(new CardSliderItem(R.drawable.nutcracker_1));
-        screenshotsSliderItems.add(new CardSliderItem(R.drawable.nutcracker_2));
+        List<Uri> screenshotsSliderUris = new ArrayList<>();
 
-        viewPagerScreenshotsSlider.setAdapter(new CardSliderAdapter(screenshotsSliderItems));
-        viewPagerScreenshotsSlider.setClipToPadding(false);
-        viewPagerScreenshotsSlider.setClipChildren(false);
-        viewPagerScreenshotsSlider.setOffscreenPageLimit(2);
-        viewPagerScreenshotsSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
-        viewPagerScreenshotsSlider.setCurrentItem(1);
-
-        float pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
-        float pagerWidth = getResources().getDimensionPixelOffset(R.dimen.screenshotPagerWidth);
-        float screenWidth = getResources().getDisplayMetrics().widthPixels;
-        float offsetPx = screenWidth - pageMarginPx - pagerWidth;
-
-        CompositePageTransformer cptScreenshots = new CompositePageTransformer();
-        cptScreenshots.addTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
-
-        viewPagerScreenshotsSlider.setPageTransformer(cptScreenshots);
+        // Firebase
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference screenshotsRef = storage.getReference("movies").child(movieID);
+        screenshotsRef.listAll()
+        .addOnSuccessListener(listResult -> {
+            for (StorageReference item : listResult.getItems())
+            {
+                item.getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    screenshotsSliderUris.add(uri);
+                })
+                .addOnCompleteListener(task -> {
+                    if(task.isComplete() && (screenshotsSliderUris.size() == listResult.getItems().size()))
+                        initScreenshotsSlider(screenshotsSliderUris.subList(0, screenshotsSliderUris.size() - 1), viewPagerScreenshotsSlider);
+                });
+            }
+        });
     }
 
     private void hideActionBar() {
@@ -164,11 +163,35 @@ public class DetailActivity extends AppCompatActivity {
             case 1:
                 countryString = "USA";
                 break;
+            case 81:
+                countryString = "Japan";
+                break;
             case 82:
-                countryString = "KOREA";
+                countryString = "Korea";
                 break;
         }
 
         return countryString;
+    }
+
+    /* Screenshots Slider */
+    private void initScreenshotsSlider(List<Uri> fetchedScreenshotsSliderUris, ViewPager2 viewPager2)
+    {
+        float pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
+        float pagerWidth = getResources().getDimensionPixelOffset(R.dimen.screenshotPagerWidth);
+        float screenWidth = getResources().getDisplayMetrics().widthPixels;
+        float offsetPx = screenWidth - pageMarginPx - pagerWidth;
+        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+
+        viewPager2.setAdapter(new ScreenshotsSliderAdapter(fetchedScreenshotsSliderUris));
+        viewPager2.setClipToPadding(false);
+        viewPager2.setClipChildren(false);
+        viewPager2.setOffscreenPageLimit(3);
+        viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+        viewPager2.setCurrentItem(1);
+
+        compositePageTransformer.addTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
+
+        viewPager2.setPageTransformer(compositePageTransformer);
     }
 }
