@@ -32,9 +32,7 @@
 
         <activity android:name=".DetailActivity" />
 
-        <activity
-            android:name=".signup.SignupActivity"
-            android:label="@string/title_activity_signup" />
+        <activity android:name=".signup.SignupActivity"/>
     </application>
 
 </manifest>
