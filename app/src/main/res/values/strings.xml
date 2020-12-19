@@ -1,4 +1,5 @@
 <resources>
+    <!-- Main Activity -->
     <string name="app_name">Netflix Clone</string>
     <string name="cd_btn_menu">Menu Button</string>
     <string name="cd_iv_logo">Logo Image</string>
@@ -11,6 +12,8 @@
     <string name="cd_mylist">My List Button</string>
     <string name="tv_popular">Popular</string>
     <string name="cd_popular">Popular Button</string>
+
+    <!-- Detail Activity -->
     <string name="cd_detail_back">Back Button On Detail Activity</string>
     <string name="cd_detail_search">Search Button On Detail Activity</string>
     <string name="cd_detail_play">Play Button On Detail Activity</string>
@@ -31,4 +34,27 @@
     <string name="tv_detail_screenshots">Screenshots</string>
     <string name="cd_detail_screenshots">Screenshots Button</string>
     <string name="cd_detail_rep_image">Rep Image</string>
+
+    <!-- Onboarding Activity -->
+    <string name="title_activity_onboarding">OnboardingActivity</string>
+    <string name="btn_signup">회원가입</string>
+    <string name="btn_login">로그인</string>
+    <string name="tv_onboarding_title_0">
+        영화, TV, 프로그램 등을 무제한으로
+    </string>
+    <string name="tv_onboarding_title_1">
+        저장해서 오프라인으로 시청하세요
+    </string>
+    <string name="tv_onboarding_title_2">
+        약정도 광고도 없다
+    </string>
+    <string name="tv_onboarding_desc_0">
+        다양한 디바이스에서 자유롭게 시청하고 언제든지 해지하세요.
+    </string>
+    <string name="tv_onboarding_desc_1">
+        미리 저장해놓으면 오프라인에서도 지루할 틈이 없습니다.
+    </string>
+    <string name="tv_onboarding_desc_2">
+        가입은 당일, 해지는 원할 때.
+    </string>
 </resources>
