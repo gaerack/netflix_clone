@@ -54,10 +54,8 @@
     <string name="autofill_password">&#160;&#160;비밀번호를 입력하세요.</string>
     <string name="autofill_confirm_password">&#160;&#160;비밀번호 확인</string>
     <string name="title_activity_login">LoginActivity</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
 
+    <!-- Splash Activity -->
+    <string name="title_app_name">Netflix Clone</string>
+    <string name="cd_splash_image">Splash Screen Image</string>
 </resources>

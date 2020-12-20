@@ -37,9 +37,9 @@ public class OnboardingActivity extends AppCompatActivity {
         ViewPager2 viewPagerOnboardingSlider = findViewById(R.id.vp_onboarding);
 
         List<OnboardingSliderItem> onboardingSliderItems = new ArrayList<>();
-        onboardingSliderItems.add(new OnboardingSliderItem(R.drawable.onboarding_0, getResources().getString(R.string.tv_onboarding_title_0), getResources().getString(R.string.tv_onboarding_desc_0)));
-        onboardingSliderItems.add(new OnboardingSliderItem(R.drawable.onboarding_1, getResources().getString(R.string.tv_onboarding_title_1), getResources().getString(R.string.tv_onboarding_desc_1)));
-        onboardingSliderItems.add(new OnboardingSliderItem(R.drawable.onboarding_2, getResources().getString(R.string.tv_onboarding_title_2), getResources().getString(R.string.tv_onboarding_desc_2)));
+        onboardingSliderItems.add(new OnboardingSliderItem(R.drawable.onboarding_1, getResources().getString(R.string.tv_onboarding_title_0), getResources().getString(R.string.tv_onboarding_desc_0)));
+        onboardingSliderItems.add(new OnboardingSliderItem(R.drawable.onboarding_2, getResources().getString(R.string.tv_onboarding_title_1), getResources().getString(R.string.tv_onboarding_desc_1)));
+        onboardingSliderItems.add(new OnboardingSliderItem(R.drawable.onboarding_0, getResources().getString(R.string.tv_onboarding_title_2), getResources().getString(R.string.tv_onboarding_desc_2)));
 
         viewPagerOnboardingSlider.setAdapter(new OnboardingSliderAdapter(onboardingSliderItems));
         viewPagerOnboardingSlider.setClipToPadding(false);
