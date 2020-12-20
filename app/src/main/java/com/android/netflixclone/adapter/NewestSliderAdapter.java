@@ -1,4 +1,4 @@
-package com.android.netflixclone;
+package com.android.netflixclone.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,9 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.netflixclone.DetailActivity;
+import com.android.netflixclone.R;
+import com.android.netflixclone.model.Newest;
 import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -25,12 +28,12 @@ import java.util.Objects;
 
 public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapter.NewestSliderViewHolder>
 {
-    final List<NewestSliderItem> newestSliderItems;
+    final List<Newest> newests;
     final ViewPager2 viewPager2;
 
-    NewestSliderAdapter(List<NewestSliderItem> newestSliderItems, ViewPager2 viewPager2)
+    public NewestSliderAdapter(List<Newest> newests, ViewPager2 viewPager2)
     {
-        this.newestSliderItems = newestSliderItems;
+        this.newests = newests;
         this.viewPager2 = viewPager2;
     }
 
@@ -50,16 +53,16 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
     @Override
     public void onBindViewHolder(@NonNull NewestSliderViewHolder holder, int position)
     {
-        holder.setImage(holder.itemView.getContext(), newestSliderItems.get(position));
-        holder.setTitle(newestSliderItems.get(position));
-        holder.setTagOnTextView(newestSliderItems.get(position));
+        holder.setImage(holder.itemView.getContext(), newests.get(position));
+        holder.setTitle(newests.get(position));
+        holder.setTagOnTextView(newests.get(position));
 
-        if(position == newestSliderItems.size() - 2) viewPager2.post(runnable);
+        if(position == newests.size() - 2) viewPager2.post(runnable);
     }
 
     @Override
     public int getItemCount() {
-        return newestSliderItems.size();
+        return newests.size();
     }
 
     static class NewestSliderViewHolder extends RecyclerView.ViewHolder
@@ -91,29 +94,30 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
             });
         }
 
-        void setImage(Context context, NewestSliderItem newestSliderItem)
+        void setImage(Context context, Newest newest)
         {
             // If you want to display image from the internet
             // You can put code here using glide or picasso.
             //imageView.setImageResource(newestSliderItem.getImage());
             //Glide.with(context).load(R.drawable.newest_placeholder).into(imageView);
-            StorageReference storageRef = storage.getReferenceFromUrl(newestSliderItem.getStorageRef());
+            StorageReference storageRef = storage.getReferenceFromUrl(newest.getStorageRef());
             storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                 repImageURL = uri;
                 Glide.with(context).load(uri).into(imageView);
             });
         }
 
-        void setTitle(NewestSliderItem newestSliderItem)
+        void setTitle(Newest newest)
         {
             // If you want to display image from the internet
             // You can put code here using glide or picasso.
-            textView.setText(newestSliderItem.getTitle());
+            //textView.setText(newestSliderItem.getTitle());
+            textView.setText(newest.getTitle());
         }
 
-        void setTagOnTextView(NewestSliderItem newestSliderItem)
+        void setTagOnTextView(Newest newest)
         {
-            textView.setTag(newestSliderItem.getMovieID());
+            textView.setTag(newest.getMovieID());
         }
     }
 
@@ -122,7 +126,7 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
         @Override
         public void run()
         {
-            newestSliderItems.addAll(newestSliderItems);
+            newests.addAll(newests);
             notifyDataSetChanged();
         }
     };

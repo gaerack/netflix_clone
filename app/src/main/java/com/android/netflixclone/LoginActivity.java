@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.netflixclone.signup.SignupActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.regex.Matcher;

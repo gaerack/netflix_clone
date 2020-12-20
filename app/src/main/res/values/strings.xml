@@ -47,12 +47,12 @@
     <string name="tv_onboarding_desc_2">가입은 당일, 해지는 원할 때.</string>
 
     <!-- Signup Activity -->
-    <string name="hint_email">&#160;&#160;이메일을 입력하세요.</string>
-    <string name="hint_password">&#160;&#160;비밀번호를 입력하세요.</string>
-    <string name="hint_confirm_password">&#160;&#160;비밀번호 확인</string>
-    <string name="autofill_email">&#160;&#160;이메일을 입력하세요.</string>
-    <string name="autofill_password">&#160;&#160;비밀번호를 입력하세요.</string>
-    <string name="autofill_confirm_password">&#160;&#160;비밀번호 확인</string>
+    <string name="hint_email">이메일을 입력하세요.</string>
+    <string name="hint_password">비밀번호를 입력하세요.</string>
+    <string name="hint_confirm_password">비밀번호 확인</string>
+    <string name="autofill_email">이메일을 입력하세요.</string>
+    <string name="autofill_password">비밀번호를 입력하세요.</string>
+    <string name="autofill_confirm_password">비밀번호 확인</string>
     <string name="title_activity_login">LoginActivity</string>
 
     <!-- Splash Activity -->

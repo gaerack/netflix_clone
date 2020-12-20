@@ -23,7 +23,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        login();
+        autoLogin();
     }
 
     private void hideActionBar() {
@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private void login()
+    private void autoLogin()
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Intent intent;
