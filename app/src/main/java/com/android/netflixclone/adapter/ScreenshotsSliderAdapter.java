@@ -1,4 +1,4 @@
-package com.android.netflixclone;
+package com.android.netflixclone.adapter;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.netflixclone.R;
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -18,7 +19,7 @@ public class ScreenshotsSliderAdapter extends RecyclerView.Adapter<ScreenshotsSl
 
     final List<Uri> screenshotsSliderUris;
 
-    ScreenshotsSliderAdapter(List<Uri> screenshotsSliderUris)
+    public ScreenshotsSliderAdapter(List<Uri> screenshotsSliderUris)
     {
         this.screenshotsSliderUris = screenshotsSliderUris;
     }

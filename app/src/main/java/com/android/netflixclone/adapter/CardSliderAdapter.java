@@ -1,6 +1,5 @@
-package com.android.netflixclone;
+package com.android.netflixclone.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.netflixclone.R;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class CardSliderAdapter extends RecyclerView.Adapter<CardSliderAdapter.Ca
 {
     List<CardSliderItem> cardSliderItems;
 
-    CardSliderAdapter(List<CardSliderItem> cardSliderItems)
+    public CardSliderAdapter(List<CardSliderItem> cardSliderItems)
     {
         this.cardSliderItems = cardSliderItems;
     }

@@ -1,4 +1,4 @@
-package com.android.netflixclone;
+package com.android.netflixclone.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.netflixclone.R;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class OnboardingSliderAdapter  extends RecyclerView.Adapter<OnboardingSli
 {
     final List<OnboardingSliderItem> onboardingSliderItems;
 
-    OnboardingSliderAdapter(List<OnboardingSliderItem> onboardingSliderItems)
+    public OnboardingSliderAdapter(List<OnboardingSliderItem> onboardingSliderItems)
     {
         this.onboardingSliderItems = onboardingSliderItems;
     }

@@ -57,7 +57,7 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
         holder.setTitle(newests.get(position));
         holder.setTagOnTextView(newests.get(position));
 
-        if(position == newests.size() - 2) viewPager2.post(runnable);
+        //if(position == newests.size() - 2) viewPager2.post(runnable);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
         }
     }
 
-    final Runnable runnable = new Runnable()
+    /*final Runnable runnable = new Runnable()
     {
         @Override
         public void run()
@@ -129,5 +129,5 @@ public class NewestSliderAdapter extends RecyclerView.Adapter<NewestSliderAdapte
             newests.addAll(newests);
             notifyDataSetChanged();
         }
-    };
+    };*/
 }

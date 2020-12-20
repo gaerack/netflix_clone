@@ -1,8 +1,8 @@
 package com.android.netflixclone;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
@@ -19,17 +19,21 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.android.netflixclone.adapter.ScreenshotsSliderAdapter;
+import com.android.netflixclone.model.Movie;
+import com.android.netflixclone.viewmodel.MovieViewModel;
 import com.bumptech.glide.Glide;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements OnDataAdded {
+
+    private static final String TAG = "DetailActivity";
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -46,28 +50,49 @@ public class DetailActivity extends AppCompatActivity {
         /* Intent */
         Intent intent = getIntent();
         final String movieID = intent.getExtras().getString("movieID");
-        final String title = intent.getExtras().getString("title");
         final Uri repImageURL = (Uri) intent.getExtras().get("repImageURL");
 
-        /* View */
+        /* Movie Info */
+        MovieViewModel movieViewModel = new ViewModelProvider(DetailActivity.this).get(MovieViewModel.class);
+        movieViewModel.init(DetailActivity.this, movieID);
+        Movie movie = movieViewModel.getMovie().getValue();
+
         ImageView ivDetailRepImage = findViewById(R.id.iv_detail_rep_image);
         Glide.with(this).load(repImageURL).into(ivDetailRepImage);
 
         ImageButton ibDetailPlay = findViewById(R.id.ib_detail_play);
+        ibDetailPlay.setOnClickListener(view -> {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getTrailer_url())));
+        });
 
         TextView tvDetailTitle = findViewById(R.id.tv_detail_title);
-        tvDetailTitle.setText(title);
-
-        RatingBar rbRating = findViewById(R.id.rb_rating);
+        tvDetailTitle.setText(movie.getTitle());
 
         TextView tvDetailGenre = findViewById(R.id.tv_detail_genre);
+        /*String mergedGenre = "";
+
+        for(String genre : movie.getGenre())
+            mergedGenre += genre+"  ";
+
+        tvDetailGenre.setText(mergedGenre);*/
+
+        RatingBar rbRating = findViewById(R.id.rb_rating);
+        //rbRating.setRating(movie.getRating());
+
         TextView tvDetailYear = findViewById(R.id.tv_detail_year);
+        tvDetailYear.setText(movie.getYear());
+
         TextView tvDetailCountry = findViewById(R.id.tv_detail_country);
+        tvDetailCountry.setText(movie.getCountry());
+
         TextView tvDetailLength = findViewById(R.id.tv_detail_length);
+        tvDetailLength.setText(movie.getLength());
+
         TextView tvDetailDesc = findViewById(R.id.tv_detail_desc);
+        tvDetailDesc.setText(movie.getDesc());
 
         // Firebase
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        /*FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("movies").document(movieID);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful())
@@ -95,7 +120,7 @@ public class DetailActivity extends AppCompatActivity {
             {
                 Log.d("Detail", "get failed with ", task.getException());
             }
-        });
+        });*/
 
         /* Screenshots Slider */
         ViewPager2 viewPagerScreenshotsSlider = findViewById(R.id.vp_screenshots);
@@ -154,24 +179,11 @@ public class DetailActivity extends AppCompatActivity {
         view.startAnimation(animate);
     }
 
-    private String convertContryCodeToString(int countryCode)
+    /* Movie Info */
+    @Override
+    public void added()
     {
-        String countryString = "";
-
-        switch(countryCode)
-        {
-            case 1:
-                countryString = "USA";
-                break;
-            case 81:
-                countryString = "Japan";
-                break;
-            case 82:
-                countryString = "Korea";
-                break;
-        }
-
-        return countryString;
+        Log.d(TAG, "fetched Movie");
     }
 
     /* Screenshots Slider */

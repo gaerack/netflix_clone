@@ -10,6 +10,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.android.netflixclone.adapter.CardSliderAdapter;
+import com.android.netflixclone.adapter.CardSliderItem;
 import com.android.netflixclone.adapter.NewestSliderAdapter;
 import com.android.netflixclone.model.Newest;
 import com.android.netflixclone.viewmodel.NewestViewModel;
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements OnDataAdded {
     /* Newest Slider */
     private ViewPager2 viewPagerNewestSlider;
     private NewestSliderAdapter newestSliderAdapter;
-    final Handler newestSliderHandler = new Handler();
+    //final Handler newestSliderHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +72,13 @@ public class MainActivity extends AppCompatActivity implements OnDataAdded {
     @Override
     protected void onPause() {
         super.onPause();
-        newestSliderHandler.removeCallbacks(sliderRunnable);
+        //newestSliderHandler.removeCallbacks(sliderRunnable);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        newestSliderHandler.postDelayed(sliderRunnable, 2000);
+        //newestSliderHandler.postDelayed(sliderRunnable, 2000);
     }
 
     /* Newest Slider */
@@ -107,17 +109,17 @@ public class MainActivity extends AppCompatActivity implements OnDataAdded {
         });
 
         viewPagerNewestSlider.setPageTransformer(cptNewest);
-        viewPagerNewestSlider.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        /*viewPagerNewestSlider.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 newestSliderHandler.removeCallbacks(sliderRunnable);
                 newestSliderHandler.postDelayed(sliderRunnable, 2000);
             }
-        });
+        });*/
     }
 
-    final Runnable sliderRunnable = () -> viewPagerNewestSlider.setCurrentItem(viewPagerNewestSlider.getCurrentItem() + 1);
+    //final Runnable sliderRunnable = () -> viewPagerNewestSlider.setCurrentItem(viewPagerNewestSlider.getCurrentItem() + 1);
 
     /* My List and Popular Slider */
     private void initCardSlider(ViewPager2 viewPager2, List<CardSliderItem> fetchedCardSliderItems)

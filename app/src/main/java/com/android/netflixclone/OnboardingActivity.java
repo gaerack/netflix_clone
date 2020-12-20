@@ -10,6 +10,9 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.netflixclone.adapter.OnboardingSliderAdapter;
+import com.android.netflixclone.adapter.OnboardingSliderItem;
+
 import java.util.ArrayList;
 import java.util.List;
 

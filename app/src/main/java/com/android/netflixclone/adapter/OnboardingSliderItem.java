@@ -1,4 +1,4 @@
-package com.android.netflixclone;
+package com.android.netflixclone.adapter;
 
 public class OnboardingSliderItem {
 
