@@ -27,11 +27,11 @@ public class OnboardingActivity extends AppCompatActivity {
 
         /* Login Button */
         Button loginButton = findViewById(R.id.btn_onboarding_login);
-        /*loginButton.setOnClickListener(view -> {
+        loginButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, LoginActivity.class);
             this.startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-        });*/
+        });
 
         /* Onboarding Slider */
         ViewPager2 viewPagerOnboardingSlider = findViewById(R.id.vp_onboarding);

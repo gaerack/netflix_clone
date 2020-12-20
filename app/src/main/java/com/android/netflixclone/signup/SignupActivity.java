@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.netflixclone.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -55,14 +56,13 @@ public class SignupActivity extends AppCompatActivity {
         /* Signup Button */
         Button btnSignup = findViewById(R.id.btn_signup_signup);
         btnSignup.setOnClickListener(view -> {
-            pbLoading.setVisibility(View.VISIBLE);
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             CollectionReference collectionReference = db.collection("users");
             Map<String, Object> newUser = new HashMap<>();
-
             validEmail = etEmail.getText().toString();
             validPassword = etPassword.getText().toString();
+            pbLoading.setVisibility(View.VISIBLE);
 
             if (!validEmail.equals("") && !validPassword.equals(""))
             {
@@ -72,6 +72,7 @@ public class SignupActivity extends AppCompatActivity {
                         newUser.put("email", validEmail);
                         newUser.put("uid", mAuth.getCurrentUser().getUid());
                         newUser.put("created_at", FieldValue.serverTimestamp());
+                        newUser.put("password", sha256(validPassword));
                         collectionReference.document(mAuth.getCurrentUser().getUid()).set(newUser).addOnSuccessListener(aVoid -> {
                             pbLoading.setVisibility(View.GONE);
                             finish();

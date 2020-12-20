@@ -39,29 +39,25 @@
     <string name="title_activity_onboarding">OnboardingActivity</string>
     <string name="btn_signup">회원가입</string>
     <string name="btn_login">로그인</string>
-    <string name="tv_onboarding_title_0">
-        영화, TV, 프로그램 등을 무제한으로
-    </string>
-    <string name="tv_onboarding_title_1">
-        저장해서 오프라인으로 시청하세요
-    </string>
-    <string name="tv_onboarding_title_2">
-        약정도 광고도 없다
-    </string>
-    <string name="tv_onboarding_desc_0">
-        다양한 디바이스에서 자유롭게 시청하고 언제든지 해지하세요.
-    </string>
-    <string name="tv_onboarding_desc_1">
-        미리 저장해놓으면 오프라인에서도 지루할 틈이 없습니다.
-    </string>
-    <string name="tv_onboarding_desc_2">
-        가입은 당일, 해지는 원할 때.
-    </string>
+    <string name="tv_onboarding_title_0">영화, TV, 프로그램 등을 무제한으로</string>
+    <string name="tv_onboarding_title_1">저장해서 오프라인으로 시청하세요</string>
+    <string name="tv_onboarding_title_2">약정도 광고도 없다</string>
+    <string name="tv_onboarding_desc_0">다양한 디바이스에서 자유롭게 시청하고 언제든지 해지하세요.</string>
+    <string name="tv_onboarding_desc_1">미리 저장해놓으면 오프라인에서도 지루할 틈이 없습니다.</string>
+    <string name="tv_onboarding_desc_2">가입은 당일, 해지는 원할 때.</string>
 
     <!-- Signup Activity -->
     <string name="hint_email">&#160;&#160;이메일을 입력하세요.</string>
     <string name="hint_password">&#160;&#160;비밀번호를 입력하세요.</string>
+    <string name="hint_confirm_password">&#160;&#160;비밀번호 확인</string>
     <string name="autofill_email">&#160;&#160;이메일을 입력하세요.</string>
     <string name="autofill_password">&#160;&#160;비밀번호를 입력하세요.</string>
+    <string name="autofill_confirm_password">&#160;&#160;비밀번호 확인</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 
 </resources>
