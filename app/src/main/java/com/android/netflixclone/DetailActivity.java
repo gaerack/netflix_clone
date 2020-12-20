@@ -2,13 +2,17 @@ package com.android.netflixclone;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,14 +30,27 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DetailActivity extends AppCompatActivity implements OnDataAdded {
 
-    private static final String TAG = "DetailActivity";
+    private static final String TAG = "Detail";
+
+    /* Movie Info */
+    private MovieViewModel movieViewModel;
+    private String movieID;
+    private Uri repImageURL;
+    private ImageView ivDetailRepImage;
+    private ImageButton ibDetailPlay;
+    private TextView tvDetailTitle;
+    private RatingBar rbRating;
+    private TextView tvDetailYear;
+    private TextView tvDetailCountry;
+    private TextView tvDetailLength;
+    private TextView tvDetailDesc;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -44,52 +61,57 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
 
         ImageButton ibDetailBack = findViewById(R.id.ib_detail_back);
         ibDetailBack.setOnClickListener(view -> {
-            onBackPressed();
+            finish();
         });
 
         /* Intent */
         Intent intent = getIntent();
-        final String movieID = intent.getExtras().getString("movieID");
-        final Uri repImageURL = (Uri) intent.getExtras().get("repImageURL");
+        movieID = intent.getExtras().getString("movieID");
+        repImageURL = (Uri) intent.getExtras().get("repImageURL");
 
         /* Movie Info */
-        MovieViewModel movieViewModel = new ViewModelProvider(DetailActivity.this).get(MovieViewModel.class);
+        movieViewModel = new ViewModelProvider(DetailActivity.this).get(MovieViewModel.class);
         movieViewModel.init(DetailActivity.this, movieID);
-        Movie movie = movieViewModel.getMovie().getValue();
-
-        ImageView ivDetailRepImage = findViewById(R.id.iv_detail_rep_image);
-        Glide.with(this).load(repImageURL).into(ivDetailRepImage);
-
-        ImageButton ibDetailPlay = findViewById(R.id.ib_detail_play);
-        ibDetailPlay.setOnClickListener(view -> {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getTrailer_url())));
+        movieViewModel.setMovieToLiveData(this);
+        movieViewModel.getMovieFromViewModel().observe(this, movie -> {
+            Log.e(TAG, "movie: "+movie.getDesc());
+            setMovieInfo(movie);
         });
 
-        TextView tvDetailTitle = findViewById(R.id.tv_detail_title);
-        tvDetailTitle.setText(movie.getTitle());
+        ivDetailRepImage = findViewById(R.id.iv_detail_rep_image);
+        ivDetailRepImage.setImageResource(R.drawable.newest_placeholder);
 
-        TextView tvDetailGenre = findViewById(R.id.tv_detail_genre);
-        /*String mergedGenre = "";
+        ibDetailPlay = findViewById(R.id.ib_detail_play);
+
+        /*ibDetailPlay.setOnClickListener(view -> {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getTrailer_url())));
+        });*/
+
+        tvDetailTitle = findViewById(R.id.tv_detail_title);
+        tvDetailTitle.setText(R.string.hs_detail_title);
+
+        /*TextView tvDetailGenre = findViewById(R.id.tv_detail_genre);
+        String mergedGenre = "";
 
         for(String genre : movie.getGenre())
             mergedGenre += genre+"  ";
 
         tvDetailGenre.setText(mergedGenre);*/
 
-        RatingBar rbRating = findViewById(R.id.rb_rating);
-        //rbRating.setRating(movie.getRating());
+        rbRating = findViewById(R.id.rb_rating);
+        rbRating.setRating(0);
 
-        TextView tvDetailYear = findViewById(R.id.tv_detail_year);
-        tvDetailYear.setText(movie.getYear());
+        tvDetailYear = findViewById(R.id.tv_detail_year);
+        tvDetailYear.setText(R.string.hs_detail_year);
 
-        TextView tvDetailCountry = findViewById(R.id.tv_detail_country);
-        tvDetailCountry.setText(movie.getCountry());
+        tvDetailCountry = findViewById(R.id.tv_detail_country);
+        tvDetailCountry.setText(R.string.hs_detail_country);
 
-        TextView tvDetailLength = findViewById(R.id.tv_detail_length);
-        tvDetailLength.setText(movie.getLength());
+        tvDetailLength = findViewById(R.id.tv_detail_length);
+        tvDetailLength.setText(R.string.hs_detail_length);
 
-        TextView tvDetailDesc = findViewById(R.id.tv_detail_desc);
-        tvDetailDesc.setText(movie.getDesc());
+        tvDetailDesc = findViewById(R.id.tv_detail_desc);
+        tvDetailDesc.setText(R.string.tv_detail_desc);
 
         // Firebase
         /*FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -146,6 +168,14 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeMovieIDToSharedPref();
+        SharedPreferences sharedPref = this.getSharedPreferences("movieID", Context.MODE_PRIVATE);
+        Log.e(TAG, "MovieIDSharedPref: "+sharedPref.getString("movieID", ""));
+    }
+
     private void hideActionBar() {
         ActionBar actionBar = getSupportActionBar();
 
@@ -180,10 +210,32 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
     }
 
     /* Movie Info */
+    private void removeMovieIDToSharedPref()
+    {
+        SharedPreferences sharedPref = this.getSharedPreferences("movieID", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("movieID", "");
+        editor.apply();
+    }
+
     @Override
     public void added()
     {
-        Log.d(TAG, "fetched Movie");
+        Log.e(TAG, "added on DetailActivity");
+    }
+
+    private void setMovieInfo(Movie movie)
+    {
+        Glide.with(this).load(repImageURL).into(ivDetailRepImage);
+        ibDetailPlay.setOnClickListener(view -> {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getTrailer_url())));
+        });
+        tvDetailTitle.setText(movie.getTitle());
+        //rbRating.setRating(Float.parseFloat(movie.getRating()));
+        tvDetailYear.setText(movie.getYear());
+        tvDetailCountry.setText(movie.getCountry());
+        tvDetailLength.setText(movie.getLength());
+        tvDetailDesc.setText(movie.getDesc());
     }
 
     /* Screenshots Slider */

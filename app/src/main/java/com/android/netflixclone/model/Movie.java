@@ -1,12 +1,14 @@
 package com.android.netflixclone.model;
 
+import java.util.List;
+
 public class Movie {
 
-    Long country;
+    String country;
     String desc;
     //Object genre;
     String length;
-    //Double rating;
+    String rating;
     String title;
     String trailer_url;
     String year;
@@ -25,35 +27,36 @@ public class Movie {
         this.year = year;
     }*/
 
-    public Movie(Long country, String desc, String length, String title, String trailer_url, String year)
+    public Movie(String country, String desc, String length, String rating, String title, String trailer_url, String year)
     {
         this.country = country;
         this.desc = desc;
         this.length = length;
+        this.rating = rating;
         this.title = title;
         this.trailer_url = trailer_url;
         this.year = year;
     }
 
     public String getCountry() {
-        return convertContryCodeToString(Integer.parseInt(String.valueOf(country)));
+        return country;
     }
 
     public String getDesc() {
         return desc;
     }
 
-    /*public Object getGenre() {
-        return genre;
+    /*public List<String> getGenre() {
+        return (List<String>)genre;
     }*/
 
     public String getLength() {
         return length+" min";
     }
 
-    /*public Double getRating() {
+    public String getRating() {
         return rating;
-    }*/
+    }
 
     public String getTitle() {
         return title;
@@ -65,25 +68,5 @@ public class Movie {
 
     public String getYear() {
         return year;
-    }
-
-    private String convertContryCodeToString(int countryCode)
-    {
-        String countryString = "";
-
-        switch(countryCode)
-        {
-            case 1:
-                countryString = "USA";
-                break;
-            case 81:
-                countryString = "Japan";
-                break;
-            case 82:
-                countryString = "Korea";
-                break;
-        }
-
-        return countryString;
     }
 }

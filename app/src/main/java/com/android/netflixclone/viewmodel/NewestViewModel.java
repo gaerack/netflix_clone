@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class NewestViewModel extends ViewModel {
 
-    MutableLiveData<ArrayList<Newest>> liveData;
+    private MutableLiveData<ArrayList<Newest>> liveData;
 
     public void init(Context context)
     {

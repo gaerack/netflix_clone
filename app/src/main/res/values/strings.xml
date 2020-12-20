@@ -19,14 +19,14 @@
     <string name="cd_detail_play">Play Button On Detail Activity</string>
     <string name="cd_detail_add">Add Button On Detail Activity</string>
     <string name="cd_detail_share">Share Button On Detail Activity</string>
-    <string name="hs_detail_title">THE NUTCRACKER AND THE FOUR REALMS</string>
+    <string name="hs_detail_title">Movie Title</string>
     <string name="hs_detail_genre">Adventure, Family, Fantasy</string>
+    <string name="hs_detail_year">3000</string>
     <string name="tv_detail_label_year">Year</string>
-    <string name="hs_detail_year">2018</string>
     <string name="tv_detail_label_country">Country</string>
-    <string name="hs_detail_country">USA</string>
+    <string name="hs_detail_country">Anywhere</string>
     <string name="tv_detail_label_length">Length</string>
-    <string name="hs_detail_length">100 min</string>
+    <string name="hs_detail_length">000 min</string>
     <string name="tv_detail_desc">
         Lorem Ipsum is simply dummy text of the printing and typesetting industry.
         Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
