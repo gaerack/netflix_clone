@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.netflixclone.signup.SignupActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.regex.Matcher;
@@ -52,14 +54,22 @@ public class LoginActivity extends AppCompatActivity {
             validPassword = etPassword.getText().toString();
             pbLoading.setVisibility(View.VISIBLE);
 
-            mAuth.signInWithEmailAndPassword(validEmail, validPassword).addOnSuccessListener(authResult -> {
-                storeUIDToSharedPref(authResult.getUser().getUid());
-                pbLoading.setVisibility(View.GONE);
-                finish();
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            });
+            if(isEmailValid(validEmail) && isPasswordValid(validPassword))
+            {
+                mAuth.signInWithEmailAndPassword(validEmail, validPassword).addOnSuccessListener(authResult -> {
+                    storeUIDToSharedPref(authResult.getUser().getUid());
+                    pbLoading.setVisibility(View.GONE);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
+                });
+            }
+            else
+            {
+                if(isEmailValid(validEmail)) Toast.makeText(LoginActivity.this, "올바르지 않은 이메일 양식입니다.", Toast.LENGTH_SHORT).show();
+                if(isPasswordValid(validPassword)) Toast.makeText(LoginActivity.this, "올바르지 않은 비밀번호 양식입니다.", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

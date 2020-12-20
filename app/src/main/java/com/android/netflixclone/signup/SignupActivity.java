@@ -49,6 +49,9 @@ public class SignupActivity extends AppCompatActivity {
         /* Password */
         EditText etPassword = findViewById(R.id.et_signup_password);
 
+        /* Confirm Password */
+        EditText etConfirmPassword = findViewById(R.id.et_signup_confirm_password);
+
         /* ProgressBar */
         ProgressBar pbLoading = findViewById(R.id.pb_signup_loading);
         pbLoading.setVisibility(View.GONE);
@@ -61,10 +64,11 @@ public class SignupActivity extends AppCompatActivity {
             CollectionReference collectionReference = db.collection("users");
             Map<String, Object> newUser = new HashMap<>();
             validEmail = etEmail.getText().toString();
-            validPassword = etPassword.getText().toString();
+            validPassword = (etPassword.getText().toString().equals(etConfirmPassword.getText().toString())) ? etConfirmPassword.getText().toString() : "";
+
             pbLoading.setVisibility(View.VISIBLE);
 
-            if (!validEmail.equals("") && !validPassword.equals(""))
+            if (isEmailValid(validEmail) && isPasswordValid(validPassword))
             {
                 mAuth.createUserWithEmailAndPassword(validEmail, validPassword).addOnCompleteListener(task -> {
                     if (task.isSuccessful())
