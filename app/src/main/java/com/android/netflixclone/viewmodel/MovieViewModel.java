@@ -1,38 +1,30 @@
 package com.android.netflixclone.viewmodel;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.netflixclone.MovieRepo;
+import com.android.netflixclone.repo.MovieRepo;
 import com.android.netflixclone.model.Movie;
 
 public class MovieViewModel extends ViewModel {
 
-    private MutableLiveData<Movie> liveData;
-    //private MovieRepo movieRepo;
-    private static final String TAG = "MovieViewModel";
+    private MutableLiveData<Movie> mutableLiveData;
 
     public void init(Context context, String movieID)
     {
-        //if(liveData != null)
-        //    return;
-
-        //liveData = MovieRepo.getInstance(context).getMovie(movieID);
-        MovieRepo.getInstance(context).setMovie(context, movieID);
+        MovieRepo.getInstance(context).setLiveData(context, movieID);
     }
 
-    public void setMovieToLiveData(Context context)
+    public void setMutableLiveDataToViewModel(Context context)
     {
-        liveData = MovieRepo.getInstance(context).getMovie();
+        mutableLiveData = MovieRepo.getInstance(context).getLiveData();
     }
 
-    // Subscribe live data
-    public LiveData<Movie> getMovieFromViewModel()
+    public LiveData<Movie> getMutableLiveDataFromViewModel()
     {
-        return liveData;
+        return mutableLiveData;
     }
 }

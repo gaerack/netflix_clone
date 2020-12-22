@@ -1,10 +1,11 @@
-package com.android.netflixclone;
+package com.android.netflixclone.repo;
 
 import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.android.netflixclone.OnDataAdded;
 import com.android.netflixclone.model.Newest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -12,19 +13,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Repo {
+public class NewestRepo {
 
-    private static Repo instance;
-    private ArrayList<Newest> arrayList = new ArrayList<>();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static NewestRepo instance;
+    private final ArrayList<Newest> arrayList = new ArrayList<>();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "Repo";
 
     private static OnDataAdded onDataAdded;
 
-    public static Repo getInstance(Context context)
+    public static NewestRepo getInstance(Context context)
     {
         if(instance == null)
-            instance = new Repo();
+            instance = new NewestRepo();
 
         onDataAdded = (OnDataAdded) context;
         return instance;

@@ -1,12 +1,12 @@
-package com.android.netflixclone;
+package com.android.netflixclone.repo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 
+import com.android.netflixclone.OnDataAdded;
 import com.android.netflixclone.model.Movie;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -29,16 +29,12 @@ public class MovieRepo {
         return instance;
     }
 
-    public MutableLiveData<Movie> getMovie() // String movieID
+    public MutableLiveData<Movie> getLiveData() // String movieID
     {
-        //fetchMovie(movieID);
-
-        //MutableLiveData<Movie> data = new MutableLiveData<>();
-        //data.setValue(movie);
         return liveData;
     }
 
-    public void setMovie(Context context, String movieID)
+    public void setLiveData(Context context, String movieID)
     {
         fetchMovie(movieID);
         liveData.setValue(movie);
@@ -49,9 +45,7 @@ public class MovieRepo {
             Log.e(TAG, "movieID: "+movieID);
             Log.e(TAG, "setMovie: null");
             storeMovieIDToSharedPref(context, movieID);
-            new android.os.Handler().postDelayed(
-                    () -> setMovie(context, movieID),
-                    300);
+            new android.os.Handler().postDelayed(() -> setLiveData(context, movieID),300);
         }
         else
         {
@@ -70,6 +64,7 @@ public class MovieRepo {
                 movie = new Movie(
                         documentSnapshot.getString("country"),
                         documentSnapshot.getString("desc"),
+                        documentSnapshot.get("genre"),
                         documentSnapshot.getString("length"),
                         documentSnapshot.getString("rating"),
                         documentSnapshot.getString("title"),

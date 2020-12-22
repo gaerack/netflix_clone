@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 
 import com.android.netflixclone.adapter.CardSliderAdapter;
 import com.android.netflixclone.adapter.CardSliderItem;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnDataAdded {
     @Override
     protected void onStart() {
         super.onStart();
+        emptyMovieIDToSharedPref();
     }
 
     @Override
@@ -79,6 +81,15 @@ public class MainActivity extends AppCompatActivity implements OnDataAdded {
     protected void onResume() {
         super.onResume();
         //newestSliderHandler.postDelayed(sliderRunnable, 2000);
+    }
+
+    /* Movie Info for DetailActivity */
+    private void emptyMovieIDToSharedPref()
+    {
+        SharedPreferences sharedPref = this.getSharedPreferences("movieID", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("movieID", "");
+        editor.apply();
     }
 
     /* Newest Slider */

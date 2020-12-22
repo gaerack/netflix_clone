@@ -6,7 +6,7 @@ public class Movie {
 
     String country;
     String desc;
-    //Object genre;
+    Object genre;
     String length;
     String rating;
     String title;
@@ -27,10 +27,11 @@ public class Movie {
         this.year = year;
     }*/
 
-    public Movie(String country, String desc, String length, String rating, String title, String trailer_url, String year)
+    public Movie(String country, String desc, Object genre, String length, String rating, String title, String trailer_url, String year)
     {
         this.country = country;
         this.desc = desc;
+        this.genre = genre;
         this.length = length;
         this.rating = rating;
         this.title = title;
@@ -46,9 +47,9 @@ public class Movie {
         return desc;
     }
 
-    /*public List<String> getGenre() {
-        return (List<String>)genre;
-    }*/
+    public Object getGenre() {
+        return genre;
+    }
 
     public String getLength() {
         return length+" min";

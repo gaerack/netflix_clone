@@ -2,7 +2,6 @@ package com.android.netflixclone;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,30 +26,29 @@ import com.android.netflixclone.adapter.ScreenshotsSliderAdapter;
 import com.android.netflixclone.model.Movie;
 import com.android.netflixclone.viewmodel.MovieViewModel;
 import com.bumptech.glide.Glide;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class DetailActivity extends AppCompatActivity implements OnDataAdded {
 
-    private static final String TAG = "Detail";
-
     /* Movie Info */
-    private MovieViewModel movieViewModel;
-    private String movieID;
     private Uri repImageURL;
     private ImageView ivDetailRepImage;
     private ImageButton ibDetailPlay;
     private TextView tvDetailTitle;
+    private TextView tvDetailGenre;
     private RatingBar rbRating;
     private TextView tvDetailYear;
     private TextView tvDetailCountry;
     private TextView tvDetailLength;
     private TextView tvDetailDesc;
+
+    /* Screenshots */
+    private ViewPager2 viewPagerScreenshotsSlider;
+    private final static String STORAGE_REF_PREFIX = "gs://netflix-clone-22844.appspot.com/movies/";
+
+    private static final String TAG = "Detail";
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -60,20 +58,18 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
         hideActionBar();
 
         ImageButton ibDetailBack = findViewById(R.id.ib_detail_back);
-        ibDetailBack.setOnClickListener(view -> {
-            finish();
-        });
+        ibDetailBack.setOnClickListener(view -> finish());
 
         /* Intent */
         Intent intent = getIntent();
-        movieID = intent.getExtras().getString("movieID");
+        String movieID = intent.getExtras().getString("movieID");
         repImageURL = (Uri) intent.getExtras().get("repImageURL");
 
         /* Movie Info */
-        movieViewModel = new ViewModelProvider(DetailActivity.this).get(MovieViewModel.class);
+        MovieViewModel movieViewModel = new ViewModelProvider(DetailActivity.this).get(MovieViewModel.class);
         movieViewModel.init(DetailActivity.this, movieID);
-        movieViewModel.setMovieToLiveData(this);
-        movieViewModel.getMovieFromViewModel().observe(this, movie -> {
+        movieViewModel.setMutableLiveDataToViewModel(this);
+        movieViewModel.getMutableLiveDataFromViewModel().observe(this, movie -> {
             Log.e(TAG, "movie: "+movie.getDesc());
             setMovieInfo(movie);
         });
@@ -83,20 +79,11 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
 
         ibDetailPlay = findViewById(R.id.ib_detail_play);
 
-        /*ibDetailPlay.setOnClickListener(view -> {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getTrailer_url())));
-        });*/
-
         tvDetailTitle = findViewById(R.id.tv_detail_title);
         tvDetailTitle.setText(R.string.hs_detail_title);
 
-        /*TextView tvDetailGenre = findViewById(R.id.tv_detail_genre);
-        String mergedGenre = "";
-
-        for(String genre : movie.getGenre())
-            mergedGenre += genre+"  ";
-
-        tvDetailGenre.setText(mergedGenre);*/
+        tvDetailGenre = findViewById(R.id.tv_detail_genre);
+        tvDetailGenre.setText(R.string.hs_detail_genre);
 
         rbRating = findViewById(R.id.rb_rating);
         rbRating.setRating(0);
@@ -113,65 +100,15 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
         tvDetailDesc = findViewById(R.id.tv_detail_desc);
         tvDetailDesc.setText(R.string.tv_detail_desc);
 
-        // Firebase
-        /*FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("movies").document(movieID);
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful())
-            {
-                DocumentSnapshot document = task.getResult();
-
-                ibDetailPlay.setOnClickListener(view -> {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(document.getString("trailer_url"))));
-                });
-
-                List<String> genreArray = (List<String>)document.get("genre");
-                String mergedGenre = "";
-                for(String genre : genreArray)
-                    mergedGenre += genre+"  ";
-
-                rbRating.setRating(Float.parseFloat(String.valueOf(document.get("rating"))));
-
-                tvDetailGenre.setText(mergedGenre);
-                tvDetailYear.setText(String.valueOf(document.getLong("year")));
-                tvDetailCountry.setText(convertContryCodeToString(Integer.parseInt(String.valueOf(document.getLong("country")))));
-                tvDetailLength.setText(document.getLong("length")+" min");
-                tvDetailDesc.setText(document.getString("desc"));
-            }
-            else
-            {
-                Log.d("Detail", "get failed with ", task.getException());
-            }
-        });*/
-
         /* Screenshots Slider */
-        ViewPager2 viewPagerScreenshotsSlider = findViewById(R.id.vp_screenshots);
-
-        List<Uri> screenshotsSliderUris = new ArrayList<>();
-
-        // Firebase
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference screenshotsRef = storage.getReference("movies").child(movieID);
-        screenshotsRef.listAll()
-        .addOnSuccessListener(listResult -> {
-            for (StorageReference item : listResult.getItems())
-            {
-                item.getDownloadUrl()
-                .addOnSuccessListener(uri -> {
-                    screenshotsSliderUris.add(uri);
-                })
-                .addOnCompleteListener(task -> {
-                    if(task.isComplete() && (screenshotsSliderUris.size() == listResult.getItems().size()))
-                        initScreenshotsSlider(screenshotsSliderUris.subList(0, screenshotsSliderUris.size() - 1), viewPagerScreenshotsSlider);
-                });
-            }
-        });
+        viewPagerScreenshotsSlider = findViewById(R.id.vp_screenshots);
+        initScreenshotsSlider(movieID);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        removeMovieIDToSharedPref();
+        emptyMovieIDToSharedPref();
         SharedPreferences sharedPref = this.getSharedPreferences("movieID", Context.MODE_PRIVATE);
         Log.e(TAG, "MovieIDSharedPref: "+sharedPref.getString("movieID", ""));
     }
@@ -210,7 +147,7 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
     }
 
     /* Movie Info */
-    private void removeMovieIDToSharedPref()
+    private void emptyMovieIDToSharedPref()
     {
         SharedPreferences sharedPref = this.getSharedPreferences("movieID", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -226,20 +163,34 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
 
     private void setMovieInfo(Movie movie)
     {
+        List<String> genreList;
+        String mergedGenre = "";
         Glide.with(this).load(repImageURL).into(ivDetailRepImage);
         ibDetailPlay.setOnClickListener(view -> {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getTrailer_url())));
         });
         tvDetailTitle.setText(movie.getTitle());
-        //rbRating.setRating(Float.parseFloat(movie.getRating()));
+
         tvDetailYear.setText(movie.getYear());
         tvDetailCountry.setText(movie.getCountry());
         tvDetailLength.setText(movie.getLength());
         tvDetailDesc.setText(movie.getDesc());
+
+        if(movie.getDesc() != null)
+        {
+            rbRating.setRating(Float.parseFloat(movie.getRating()));
+
+            genreList = (List<String>)movie.getGenre();
+
+            for(String genre : genreList)
+                mergedGenre += genre+"  ";
+
+            tvDetailGenre.setText(mergedGenre);
+        }
     }
 
     /* Screenshots Slider */
-    private void initScreenshotsSlider(List<Uri> fetchedScreenshotsSliderUris, ViewPager2 viewPager2)
+    private void initScreenshotsSlider(String movieID)
     {
         float pageMarginPx = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
         float pagerWidth = getResources().getDimensionPixelOffset(R.dimen.screenshotPagerWidth);
@@ -247,15 +198,26 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
         float offsetPx = screenWidth - pageMarginPx - pagerWidth;
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
 
-        viewPager2.setAdapter(new ScreenshotsSliderAdapter(fetchedScreenshotsSliderUris));
-        viewPager2.setClipToPadding(false);
-        viewPager2.setClipChildren(false);
-        viewPager2.setOffscreenPageLimit(3);
-        viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
-        viewPager2.setCurrentItem(1);
+        ScreenshotsSliderAdapter screenshotsSliderAdapter = new ScreenshotsSliderAdapter(getScreenshots(movieID));
+        viewPagerScreenshotsSlider.setAdapter(screenshotsSliderAdapter);
+        viewPagerScreenshotsSlider.setClipToPadding(false);
+        viewPagerScreenshotsSlider.setClipChildren(false);
+        viewPagerScreenshotsSlider.setOffscreenPageLimit(3);
+        viewPagerScreenshotsSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+        viewPagerScreenshotsSlider.setCurrentItem(1);
 
         compositePageTransformer.addTransformer((page, position) -> page.setTranslationX(position * -offsetPx));
 
-        viewPager2.setPageTransformer(compositePageTransformer);
+        viewPagerScreenshotsSlider.setPageTransformer(compositePageTransformer);
+    }
+
+    private List<String> getScreenshots(String movieID)
+    {
+        List<String> screenshotURLs = new ArrayList<>();
+
+        for(int i = 0; i < 3; i++)
+            screenshotURLs.add(STORAGE_REF_PREFIX+movieID+"/"+movieID+"_"+i+".jpg");
+
+        return screenshotURLs;
     }
 }
