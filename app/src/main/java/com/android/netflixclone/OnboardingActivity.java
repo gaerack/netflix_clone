@@ -24,7 +24,7 @@ public class OnboardingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
-        hideActionBar();
+        if(getSupportActionBar() != null) getSupportActionBar().hide();
 
         /* Login Button */
         Button loginButton = findViewById(R.id.btn_onboarding_login);
@@ -59,13 +59,5 @@ public class OnboardingActivity extends AppCompatActivity {
             this.startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
-    }
-
-    private void hideActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            actionBar.hide();
-        }
     }
 }

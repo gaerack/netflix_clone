@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +32,7 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        hideActionBar();
+        if(getSupportActionBar() != null) getSupportActionBar().hide();
 
         /* Back Button */
         ImageButton ibBackButton = findViewById(R.id.ib_signup_back);
@@ -92,14 +91,6 @@ public class SignupActivity extends AppCompatActivity {
                 if(isPasswordValid(validPassword)) Toast.makeText(SignupActivity.this, "비밀번호는 6자리 이상으로 설정하세요.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void hideActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            actionBar.hide();
-        }
     }
 
     public static boolean isEmailValid(String email) {

@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        hideActionBar();
+        if(getSupportActionBar() != null) getSupportActionBar().hide();
 
         /* Newest Slider */
         viewPagerNewestSlider = findViewById(R.id.vp_newest_slider);
@@ -159,13 +159,5 @@ public class MainActivity extends AppCompatActivity {
         compositePageTransformer.addTransformer((page, position) -> page.setTranslationX(position * -myListOffsetPx));
 
         viewPager2.setPageTransformer(compositePageTransformer);
-    }
-
-    private void hideActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            actionBar.hide();
-        }
     }
 }

@@ -55,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        hideActionBar();
+        if(getSupportActionBar() != null) getSupportActionBar().hide();
 
         ImageButton ibDetailBack = findViewById(R.id.ib_detail_back);
         ibDetailBack.setOnClickListener(view -> finish());
@@ -118,14 +118,6 @@ public class DetailActivity extends AppCompatActivity {
         emptyMovieIDToSharedPref();
         SharedPreferences sharedPref = this.getSharedPreferences("movieID", Context.MODE_PRIVATE);
         Log.e(TAG, "MovieIDSharedPref: "+sharedPref.getString("movieID", ""));
-    }
-
-    private void hideActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            actionBar.hide();
-        }
     }
 
     // slide the view from below itself to the current position
