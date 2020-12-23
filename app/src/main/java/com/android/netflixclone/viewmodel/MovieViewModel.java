@@ -1,30 +1,35 @@
 package com.android.netflixclone.viewmodel;
 
-import android.content.Context;
+import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.netflixclone.repo.MovieRepo;
 import com.android.netflixclone.model.Movie;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MovieViewModel extends ViewModel {
 
-    private MutableLiveData<Movie> mutableLiveData;
+    private final MutableLiveData<Movie> mutableLiveData;
+    private static final String TAG = "MovieViewModel";
 
-    public void init(Context context, String movieID)
-    {
-        MovieRepo.getInstance(context).setLiveData(context, movieID);
+    public MovieViewModel() {
+        mutableLiveData = new MutableLiveData<>();
     }
 
-    public void setMutableLiveDataToViewModel(Context context)
-    {
-        mutableLiveData = MovieRepo.getInstance(context).getLiveData();
-    }
-
-    public LiveData<Movie> getMutableLiveDataFromViewModel()
-    {
+    public MutableLiveData<Movie> getMovie() {
         return mutableLiveData;
+    }
+
+    public void fetchMovie(String movieID)
+    {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("movies").document(movieID).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    mutableLiveData.postValue(documentSnapshot.toObject(Movie.class));
+                    Log.e(TAG, "onSuccess: added");
+                    Log.e(TAG, "--------------------------------------------------------------");
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "onFailure", e));
     }
 }

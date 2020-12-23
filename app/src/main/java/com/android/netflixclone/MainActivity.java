@@ -2,6 +2,7 @@ package com.android.netflixclone;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -10,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.android.netflixclone.adapter.CardSliderAdapter;
 import com.android.netflixclone.adapter.CardSliderItem;
@@ -20,12 +22,14 @@ import com.android.netflixclone.viewmodel.NewestViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnDataAdded {
+public class MainActivity extends AppCompatActivity {
 
     /* Newest Slider */
     private ViewPager2 viewPagerNewestSlider;
-    private NewestSliderAdapter newestSliderAdapter;
+    //private NewestSliderAdapter newestSliderAdapter;
     //final Handler newestSliderHandler = new Handler();
+
+    private static final String TAG = "Main";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +39,19 @@ public class MainActivity extends AppCompatActivity implements OnDataAdded {
 
         /* Newest Slider */
         viewPagerNewestSlider = findViewById(R.id.vp_newest_slider);
-
         NewestViewModel newestViewModel = new ViewModelProvider(MainActivity.this).get(NewestViewModel.class);
-        newestViewModel.init(MainActivity.this);
-
-        initNewestSlider(newestViewModel.getNewests().getValue());
+        newestViewModel.getNewest().observe(this, new Observer<List<Newest>>() {
+            @Override
+            public void onChanged(List<Newest> newests) {
+                if(newests != null) {
+                    Log.e(TAG, "newest: "+newests.size());
+                    initNewestSlider(newestViewModel.getNewest().getValue());
+                } else {
+                    Log.e(TAG, "newest is null yet! ");
+                }
+            }
+        });
+        newestViewModel.fetchNewest();
 
         /* My List Slider */
         ViewPager2  viewPagerMyListSlider = findViewById(R.id.vp_mylist);
@@ -93,11 +105,6 @@ public class MainActivity extends AppCompatActivity implements OnDataAdded {
     }
 
     /* Newest Slider */
-    @Override
-    public void added() {
-        newestSliderAdapter.notifyDataSetChanged();
-    }
-
     private void initNewestSlider(List<Newest> fetchedNewests)
     {
         float PAGE_MARGIN_PX = getResources().getDimensionPixelOffset(R.dimen.pageMargin);
@@ -106,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnDataAdded {
         float newestOffsetPx = SCREEN_WIDTH - PAGE_MARGIN_PX - newestViewPagerWidth;
         CompositePageTransformer cptNewest = new CompositePageTransformer();
 
-        newestSliderAdapter = new NewestSliderAdapter(fetchedNewests, viewPagerNewestSlider);
+        NewestSliderAdapter newestSliderAdapter = new NewestSliderAdapter(fetchedNewests, viewPagerNewestSlider);
         viewPagerNewestSlider.setAdapter(newestSliderAdapter);
         viewPagerNewestSlider.setClipToPadding(false);
         viewPagerNewestSlider.setClipChildren(false);
@@ -140,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements OnDataAdded {
         float myListViewPagerWidth = getResources().getDimensionPixelOffset(R.dimen.pagerWidth);
         float myListOffsetPx = SCREEN_WIDTH - PAGE_MARGIN_PX - myListViewPagerWidth;
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+
 
         viewPager2.setAdapter(new CardSliderAdapter(fetchedCardSliderItems));
         viewPager2.setClipToPadding(false);

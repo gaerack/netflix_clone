@@ -1,30 +1,48 @@
 package com.android.netflixclone.viewmodel;
 
-import android.content.Context;
+import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.netflixclone.repo.NewestRepo;
 import com.android.netflixclone.model.Newest;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NewestViewModel extends ViewModel {
 
-    private MutableLiveData<ArrayList<Newest>> liveData;
+    private final MutableLiveData<List<Newest>> mutableLiveData;
+    private final List<Newest> fetchedList = new ArrayList<>();
+    private static final String TAG = "NewestViewModel";
 
-    public void init(Context context)
-    {
-        if(liveData != null)
-            return;
-
-        liveData = NewestRepo.getInstance(context).getNewests();
+    public NewestViewModel() {
+        mutableLiveData = new MutableLiveData<>();
     }
 
-    public LiveData<ArrayList<Newest>> getNewests()
+    public MutableLiveData<List<Newest>> getNewest() {
+        return mutableLiveData;
+    }
+
+    public void fetchNewest()
     {
-        return liveData;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("movies").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+
+                    for(DocumentSnapshot documentSnapshot : list)
+                    {
+                        //arrayList.add(documentSnapshot.toObject(Newest.class));
+                        fetchedList.add(new Newest(documentSnapshot.getId(), documentSnapshot.getString("title")));
+                    }
+
+                    mutableLiveData.postValue(fetchedList);
+                    Log.e(TAG, "onSuccess: added");
+                    Log.e(TAG, "--------------------------------------------------------------");
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "onFailure", e));
     }
 }

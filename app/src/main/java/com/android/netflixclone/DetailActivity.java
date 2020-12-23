@@ -30,7 +30,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity implements OnDataAdded {
+public class DetailActivity extends AppCompatActivity {
 
     /* Movie Info */
     private Uri repImageURL;
@@ -67,12 +67,19 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
 
         /* Movie Info */
         MovieViewModel movieViewModel = new ViewModelProvider(DetailActivity.this).get(MovieViewModel.class);
-        movieViewModel.init(DetailActivity.this, movieID);
-        movieViewModel.setMutableLiveDataToViewModel(this);
-        movieViewModel.getMutableLiveDataFromViewModel().observe(this, movie -> {
-            Log.e(TAG, "movie: "+movie.getDesc());
-            setMovieInfo(movie);
+        movieViewModel.getMovie().observe(this, new Observer<Movie>() {
+            @Override
+            public void onChanged(Movie movie) {
+                if(movie != null) {
+                    Log.e(TAG, "movie: "+movie.getDesc());
+                    setMovieInfo(movie);
+                } else {
+                    Log.e(TAG, "movie is null yet! ");
+                }
+            }
         });
+        movieViewModel.fetchMovie(movieID);
+
 
         ivDetailRepImage = findViewById(R.id.iv_detail_rep_image);
         ivDetailRepImage.setImageResource(R.drawable.newest_placeholder);
@@ -153,12 +160,6 @@ public class DetailActivity extends AppCompatActivity implements OnDataAdded {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("movieID", "");
         editor.apply();
-    }
-
-    @Override
-    public void added()
-    {
-        Log.e(TAG, "added on DetailActivity");
     }
 
     private void setMovieInfo(Movie movie)
